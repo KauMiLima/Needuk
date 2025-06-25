@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nova Experiência</title>
+    <style>
+        /* Seu CSS do formulário aqui (igual antes) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .date-select-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .date-select-group select {
+            flex-grow: 1;
+            width: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Nova experiência</h1>
+    <form id="experienciaForm">
+        <!-- inputs iguais antes -->
+        <div>
+            <label for="tituloExperiencia">Título da nova experiência:</label>
+            <input type="text" id="tituloExperiencia" name="tituloExperiencia" placeholder="Título da nova experiência" />
+        </div>
+
+        <div>
+            <label for="tipoExperiencia">Tipo de experiência:</label>
+            <select id="tipoExperiencia" name="tipoExperiencia">
+                <option value="">-- Escolha uma Opção --</option>
+                <option value="Programacao">Programação</option>
+                <option value="Design">Design</option>
+                <option value="Marketing">Marketing</option>
+                <option value="GestaoDeProjetos">Gestão de Projetos</option>
+                <option value="Educacao">Educação</option>
+                <option value="Outro">Outro</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Data de Início:</label>
+            <div class="date-select-group">
+                <select id="mesInicio" name="mesInicio">
+                    <option value="">Mês</option>
+                    <option value="01">Janeiro</option>
+                    <option value="02">Fevereiro</option>
+                    <option value="03">Março</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Maio</option>
+                    <option value="06">Junho</option>
+                    <option value="07">Julho</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+                <select id="anoInicio" name="anoInicio">
+                    <option value="">Ano</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <label>Data de Término:</label>
+            <div class="date-select-group">
+                <select id="mesTermino" name="mesTermino">
+                    <option value="">Mês</option>
+                    <option value="01">Janeiro</option>
+                    <option value="02">Fevereiro</option>
+                    <option value="03">Março</option>
+                    <option value="04">Abril</option>
+                    <option value="05">Maio</option>
+                    <option value="06">Junho</option>
+                    <option value="07">Julho</option>
+                    <option value="08">Agosto</option>
+                    <option value="09">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+                <select id="anoTermino" name="anoTermino">
+                    <option value="">Ano</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <label for="cargaHoraria">Carga horária (horas):</label>
+            <input type="number" id="cargaHoraria" name="cargaHoraria" min="0" />
+        </div>
+
+        <div>
+            <label for="habilidades">Habilidades (separadas por vírgula):</label>
+            <input type="text" id="habilidades" name="habilidades" placeholder="HTML, CSS, JavaScript" />
+        </div>
+
+        <div>
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" rows="5" placeholder="Detalhes sobre a experiência..."></textarea>
+        </div>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+    <script src="../js/newExp.js"></script>
+</body>
+
+</html>

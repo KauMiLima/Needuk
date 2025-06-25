@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 400px;
+        margin: auto;
+      }
+      label {
+        display: block;
+        margin-top: 15px;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        box-sizing: border-box;
+      }
+      .error {
+        color: red;
+        font-size: 0.9em;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px;
+        width: 100%;
+        cursor: pointer;
+      }
+      .show-pass {
+        cursor: pointer;
+        position: absolute;
+        margin-left: -30px;
+        margin-top: 12px;
+        user-select: none;
+      }
+      .input-container {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Entrar</h1>
+
+    <label for="usuario">Usuário</label>
+    <input type="text" id="usuario" placeholder="Nome de usuário" />
+
+    <label for="senha">Senha</label>
+    <div class="input-container">
+      <input type="password" id="senha" placeholder="Senha" />
+      <span id="toggleSenha" class="show-pass">👁️</span>
+    </div>
+
+    <button id="btnEntrar">Entrar</button>
+
+    <div id="msgError" class="error"></div>
+
+    <script src="../js/signin.js"></script>
+  </body>
+</html>
