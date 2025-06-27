@@ -130,36 +130,6 @@ nav ul li a:hover {
     text-align: right;
 }
 
-.experiencia-actions button {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-    margin-left: 10px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.experiencia-actions .btn-editar {
-    background-color: #007bff;
-    color: white;
-}
-
-.experiencia-actions .btn-editar:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px);
-}
-
-.experiencia-actions .btn-excluir {
-    background-color: #dc3545;
-    color: white;
-}
-
-.experiencia-actions .btn-excluir:hover {
-    background-color: #c82333;
-    transform: translateY(-1px);
-}
-
 /* --- Estilo da mensagem de "Nenhuma Experiência" (Mantido) --- */
 #no-experiences-message {
     text-align: center;

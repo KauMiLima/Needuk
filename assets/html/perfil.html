@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil de Usuário</title>
+    <link rel="stylesheet" href="../css/perfil.css"> </head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="perfil.html">Perfil</a></li>
+            <li><a href="#">Configurações</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Meu Perfil</h1>
+
+        <div class="profile-section">
+            <h2>Dados Pessoais</h2>
+            <div class="profile-info">
+                <p><strong>Nome:</strong> <span id="userName">Carregando...</span></p>
+                <p><strong>Email:</strong> <span id="userEmail">Carregando...</span></p>
+                <p><strong>Telefone:</strong> <span id="userPhone">Carregando...</span></p>
+            </div>
+            <button id="editProfileBtn" class="btn-primary">Editar Dados</button>
+        </div>
+
+        <div class="header-experiencias">
+            <h2>Minhas Experiências</h2>
+            <button id="criarex">Criar Nova Experiência</button>
+        </div>
+        
+        <div id="experiencias-container">
+            </div>
+
+        <div id="no-experiences-message" style="display: none;">
+            <p>Nenhuma experiência cadastrada ainda. Clique em "Criar Nova Experiência" para adicionar uma!</p>
+        </div>
+
+        <div class="profile-section text-center">
+            <button id="viewCurriculumBtn" class="btn-primary btn-large">Ver Currículo</button>
+        </div>
+    </div>
+
+    <script src="../js/perfil.js"></script> </body>
+</html>
