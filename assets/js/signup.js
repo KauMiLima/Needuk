@@ -1,3 +1,4 @@
+// Elementos do cadastro{pronto}
 const nome = document.getElementById("nome");
 const usuario = document.getElementById("usuario");
 const senha = document.getElementById("senha");
@@ -9,6 +10,7 @@ const msgSuccess = document.getElementById("msgSuccess");
 const toggleSenha = document.getElementById("toggleSenha");
 const toggleConfirmSenha = document.getElementById("toggleConfirmSenha");
 
+// Mostrar/ocultar senha{pronto}
 function togglePassword(input, toggleIcon) {
   if (input.type === "password") {
     input.type = "text";
@@ -19,14 +21,10 @@ function togglePassword(input, toggleIcon) {
   }
 }
 
-toggleSenha.addEventListener("click", () => {
-  togglePassword(senha, toggleSenha);
-});
+toggleSenha?.addEventListener("click", () => togglePassword(senha, toggleSenha));
+toggleConfirmSenha?.addEventListener("click", () => togglePassword(confirmSenha, toggleConfirmSenha));
 
-toggleConfirmSenha.addEventListener("click", () => {
-  togglePassword(confirmSenha, toggleConfirmSenha);
-});
-
+// Validação
 function validarCampos() {
   msgError.textContent = "";
   msgSuccess.textContent = "";
@@ -58,38 +56,62 @@ function validarCampos() {
   return true;
 }
 
+// Cadastro
 function cadastrar() {
-  if (!validarCampos()) {
-    return;
-  }
+  if (!validarCampos()) return;
 
   let listaUser = JSON.parse(localStorage.getItem("listaUser") || "[]");
-
-  if (listaUser.some((u) => u.userCad === usuario.value)) {
-    msgError.textContent = "Usuário já cadastrado, escolha outro.";
+  
+  if (listaUser.some(u => u.userCad === usuario.value)) {
+    msgError.textContent = "Usuário já cadastrado.";
     usuario.focus();
     return;
   }
-
+  
   listaUser.push({
     nomeCad: nome.value,
     userCad: usuario.value,
-    senhaCad: senha.value,
+    senhaCad: senha.value
   });
-
+  
   localStorage.setItem("listaUser", JSON.stringify(listaUser));
-
+  
   msgSuccess.textContent = "Usuário cadastrado com sucesso! Redirecionando...";
   msgError.textContent = "";
-
+  
   nome.value = "";
   usuario.value = "";
   senha.value = "";
   confirmSenha.value = "";
-
+  
   setTimeout(() => {
     window.location.href = "signin.html";
-  }, 3000);
+  }, 2000);
 }
 
-btnCadastrar.addEventListener("click", cadastrar);
+btnCadastrar?.addEventListener("click", cadastrar);
+
+//  substituir este bloco localStorage pelo fetch para API{em andamento}
+/*
+fetch('', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    nome: nome.value,
+    usuario: usuario.value,
+    senha: senha.value
+  }),
+})
+.then(res => {
+  if (!res.ok) throw new Error('Erro ao cadastrar');
+  return res.json();
+})
+.then(data => {
+  // Sucesso, tratar resposta da API
+})
+.catch(err => {
+  msgError.textContent = err.message;
+});
+*/
+
+// Código atual usando localStorage{local sotage}

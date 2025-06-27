@@ -4,59 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../css/dashboard.css">
     <title>Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            max-width: 800px;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 15px;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        button#criarex {
-            margin: 20px 0;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-
-        #experiencias-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .experiencia-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 5px;
-            background: #fafafa;
-        }
-
-        .experiencia-card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-
-        .detalhe {
-            font-weight: bold;
-        }
-
-        #no-experiences-message {
-            font-style: italic;
-            color: #555;
-        }
-    </style>
 </head>
 
 <body>
@@ -67,13 +16,17 @@
         </ul>
     </nav>
 
-    <button id="criarex">Criar experiência</button>
-
+   <div class="header-experiencias">
     <h2>Minhas Experiências</h2>
+    <button id="criarex">Criar Nova Experiência</button>
+</div>
 
-    <div id="experiencias-container">
-        <p id="no-experiences-message" style="display:none;">Nenhuma experiência cadastrada ainda.</p>
+<div id="experiencias-container">
     </div>
+
+<div id="no-experiences-message" style="display: none;">
+    <p>Nenhuma experiência cadastrada ainda. Clique em "Criar Experiência" para adicionar uma!</p>
+</div>
 
     <script src="../js/dashboard.js"></script>
 </body>

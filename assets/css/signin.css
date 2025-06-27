@@ -1,0 +1,44 @@
+body {
+  background-image: url("../image/Fundo.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  margin: 0;
+}
+header {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+}
+label {
+  display: block;
+  margin-top: 15px;
+}
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+.error {
+  color: red;
+  font-size: 0.9em;
+}
+button {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+}
+.show-pass {
+  cursor: pointer;
+  position: absolute;
+  margin-left: -30px;
+  margin-top: 12px;
+  user-select: none;
+}
+.input-container {
+  position: relative;
+}

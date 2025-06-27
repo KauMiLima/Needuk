@@ -1,55 +1,66 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastro</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        max-width: 400px;
-        margin: auto;
-      }
-      label {
-        display: block;
-        margin-top: 15px;
-      }
-      input {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        box-sizing: border-box;
-      }
-      .error {
-        color: red;
-        font-size: 0.9em;
-      }
-      .success {
-        color: green;
-        font-size: 1em;
-        margin-top: 15px;
-      }
-      button {
-        margin-top: 20px;
-        padding: 10px;
-        width: 100%;
-        cursor: pointer;
-      }
-      .show-pass {
-        cursor: pointer;
-        position: absolute;
-        margin-left: -30px;
-        margin-top: 12px;
-        user-select: none;
-      }
-      .input-container {
-        position: relative;
-      }
-    </style>
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/signup.css">
+  <title>Cadastro</title>
+  <style>
+    header {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+
+    .success {
+      color: green;
+      font-size: 1em;
+      margin-top: 15px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .show-pass {
+      cursor: pointer;
+      position: absolute;
+      margin-left: -30px;
+      margin-top: 12px;
+      user-select: none;
+    }
+
+    .input-container {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
     <h1>Cadastro</h1>
 
     <label for="nome">Nome</label>
@@ -74,7 +85,9 @@
 
     <div id="msgError" class="error"></div>
     <div id="msgSuccess" class="success"></div>
+  </header>
 
-    <script src="../js/signup.js"></script>
-  </body>
+  <script src="../js/signup.js"></script>
+</body>
+
 </html>

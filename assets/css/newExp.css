@@ -1,0 +1,37 @@
+  /* Seu CSS do formulário aqui (igual antes) */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .date-select-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .date-select-group select {
+            flex-grow: 1;
+            width: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }

@@ -1,45 +1,176 @@
-  nav {
-            background-color: #333; 
-            padding: 10px 0; 
-            width: 100%; 
-        }
+/* --- Estilos Globais e do Corpo (Mantidos do último ajuste) --- */
+body {
+    width: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
 
-        nav ul {
-            list-style: none; 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-        }
+/* --- Estilos da Barra de Navegação (NAV - Mantidos) --- */
+nav {
+    background-color: #333;
+    padding: 10px 0;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-        nav ul li a {
-            color: white; 
-            text-decoration: none; 
-            padding: 8px 15px; 
-            display: block; 
-            border-radius: 4px; 
-            transition: background-color 0.3s ease; 
-        }
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
 
-        nav ul li a:hover {
-            background-color: #555; 
-        }
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
 
-        
-        #criarex {
-            display: block; 
-            margin: 20px auto; 
-            padding: 10px 20px; 
-            background-color: #28a745; 
-            color: white; 
-            border: none; 
-            border-radius: 5px;
-            cursor: pointer; 
-            font-size: 1em; 
-            transition: background-color 0.3s ease; 
-        }
+nav ul li a:hover {
+    background-color: #555;
+}
 
-        #criarex:hover {
-            background-color: #218838; 
-        }
+/* --- Novo estilo para o cabeçalho das experiências --- */
+.header-experiencias {
+    display: flex; /* Habilita o Flexbox */
+    justify-content: space-between; /* Empurra os itens para os extremos */
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+    margin: 20px auto 30px auto; /* Margens para centralizar e espaçar */
+    max-width: 800px; /* Mesma largura máxima dos cards para alinhamento */
+    padding: 0 20px; /* Padding horizontal para não colar nas bordas */
+}
+
+.header-experiencias h2 {
+    margin: 0; /* Remove a margem padrão do h2 para melhor controle */
+    font-size: 2em; /* Tamanho do título */
+    color: #333; /* Cor do título */
+}
+
+/* --- Estilos do Botão "Criar Nova Experiência" (Ajustados) --- */
+#criarex {
+    /* Remove 'display: block;' e 'margin: auto;' pois o Flexbox já controla o posicionamento */
+    padding: 10px 20px; /* Ajusta o padding para ficar melhor ao lado do título */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em; /* Ajusta o tamanho da fonte */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#criarex:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* --- Estilos dos Cards de Experiência (Mantidos) --- */
+.experiencia-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 15px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.experiencia-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Estilo para o título do card (o elemento clicável) */
+.experiencia-card h3 {
+    cursor: pointer;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+}
+
+.experiencia-card h3:hover {
+    color: #007bff;
+}
+
+/* Oculta os detalhes da experiência por padrão */
+.experiencia-detalhes {
+    display: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+    line-height: 1.6;
+}
+
+/* Classe para mostrar os detalhes da experiência */
+.experiencia-detalhes.show {
+    display: block;
+}
+
+/* Estilo para os spans de detalhe */
+.detalhe {
+    font-weight: bold;
+    color: #444;
+}
+
+/* --- Estilos para os Botões de Ação (Mantidos) --- */
+.experiencia-actions {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee;
+    text-align: right;
+}
+
+.experiencia-actions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.experiencia-actions .btn-editar {
+    background-color: #007bff;
+    color: white;
+}
+
+.experiencia-actions .btn-editar:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.experiencia-actions .btn-excluir {
+    background-color: #dc3545;
+    color: white;
+}
+
+.experiencia-actions .btn-excluir:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* --- Estilo da mensagem de "Nenhuma Experiência" (Mantido) --- */
+#no-experiences-message {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 1.1em;
+    color: #666;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}

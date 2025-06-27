@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const currentYear = new Date().getFullYear();
     const startYear = 1950;
-    const endYear = currentYear + 5;
+    const endYear = currentYear + 0;
 
     const anoInicioSelect = document.getElementById('anoInicio');
     const anoTerminoSelect = document.getElementById('anoTermino');
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const dataInicioObj = new Date(`${anoInicio}-${mesInicio}-01`);
             const dataTerminoObj = new Date(`${anoTermino}-${mesTermino}-01`);
 
-            // Ajusta para o último dia do mês
+            // Ajusta para o último dia do mês{pronto}
             dataInicioObj.setMonth(dataInicioObj.getMonth() + 1);
             dataInicioObj.setDate(0);
 
@@ -98,7 +98,32 @@ document.addEventListener("DOMContentLoaded", function () {
             habilidades,
             descricao
         };
+        
+  //  substituir este bloco localStorage pelo fetch para API{em andamento}
+  /*
+  fetch('', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nome: nome.value,
+      usuario: usuario.value,
+      senha: senha.value
+    }),
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Erro ao cadastrar');
+    return res.json();
+  })
+  .then(data => {
+    // Sucesso, tratar resposta da API
+  })
+  .catch(err => {
+    msgError.textContent = err.message;
+  });
+  */
 
+
+        // Código atual usando localStorage{local sotage}
         let experiencias = [];
         const experienciasSalvasJSON = localStorage.getItem('experiencias');
         if (experienciasSalvasJSON) {
