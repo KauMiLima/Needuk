@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Dados do Usuário ---
     function loadUserData() {
         const userLogadoJSON = localStorage.getItem('userLogado');
-        
+
         if (!userLogadoJSON) {
             alert('Nenhum usuário logado. Por favor, faça login.');
             window.location.href = 'signin.html'; // **Confira se este é o caminho correto para sua página de login**
@@ -32,9 +32,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // --- CORREÇÃO AQUI ---
+        // As propriedades corretas salvas no localStorage são: nomeCad, userCad (para email), telCad
         userNameSpan.textContent = currentUserData.nomeCad || 'Não informado';
-        userEmailSpan.textContent = currentUserData.emailCad || 'Não informado'; 
-        userPhoneSpan.textContent = currentUserData.phoneCad || 'Não informado'; 
+        userEmailSpan.textContent = currentUserData.userCad || 'Não informado'; // Use userCad para o e-mail
+        userPhoneSpan.textContent = currentUserData.telCad || 'Não informado';   // Use telCad para o telefone
+        // --- FIM DA CORREÇÃO ---
     }
 
     // --- Função para formatar a data (mantida) ---
@@ -50,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Função para carregar e renderizar as experiências (mantida) ---
-    // Esta função não terá os botões de editar/excluir individualmente, conforme solicitado antes.
     function carregarExperiencias() {
         const experienciasSalvasJSON = localStorage.getItem('experiencias');
         let experiencias = [];
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 descEl.innerHTML = `<span class="detalhe">Descrição:</span> ${exp.descricao}`;
                 detalhesContainer.appendChild(descEl);
             }
-            
+
             card.appendChild(detalhesContainer);
             experienciasContainer.appendChild(card);
         });
@@ -147,9 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
         y += 7;
         doc.text(`Nome: ${currentUserData.nomeCad || 'Não informado'}`, 10, y);
         y += 7;
-        doc.text(`Email: ${currentUserData.emailCad || 'Não informado'}`, 10, y);
+        doc.text(`Email: ${currentUserData.userCad || 'Não informado'}`, 10, y); // Use userCad para o e-mail no PDF
         y += 7;
-        doc.text(`Telefone: ${currentUserData.phoneCad || 'Não informado'}`, 10, y);
+        doc.text(`Telefone: ${currentUserData.telCad || 'Não informado'}`, 10, y); // Use telCad para o telefone no PDF
         y += 15; // Espaço após os dados pessoais
 
         // --- Experiências Profissionais ---
@@ -187,21 +189,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 doc.setFontSize(11);
                 doc.text(`- Título: ${exp.titulo}`, 15, y);
                 y += 6;
-                doc.text(`  Tipo: ${exp.tipo}`, 15, y);
+                doc.text(`   Tipo: ${exp.tipo}`, 15, y);
                 y += 6;
-                doc.text(`  Período: ${inicioFormatado} - ${terminoFormatado}`, 15, y);
+                doc.text(`   Período: ${inicioFormatado} - ${terminoFormatado}`, 15, y);
                 y += 6;
                 if (exp.cargaHoraria) {
-                    doc.text(`  Carga Horária: ${exp.cargaHoraria} horas`, 15, y);
+                    doc.text(`   Carga Horária: ${exp.cargaHoraria} horas`, 15, y);
                     y += 6;
                 }
                 if (exp.habilidades) {
-                    const habilidadesLines = doc.splitTextToSize(`  Habilidades: ${exp.habilidades}`, doc.internal.pageSize.width - 30);
+                    const habilidadesLines = doc.splitTextToSize(`   Habilidades: ${exp.habilidades}`, doc.internal.pageSize.width - 30);
                     doc.text(habilidadesLines, 15, y);
                     y += habilidadesLines.length * 5;
                 }
                 if (exp.descricao) {
-                    const descricaoLines = doc.splitTextToSize(`  Descrição: ${exp.descricao}`, doc.internal.pageSize.width - 30);
+                    const descricaoLines = doc.splitTextToSize(`   Descrição: ${exp.descricao}`, doc.internal.pageSize.width - 30);
                     doc.text(descricaoLines, 15, y);
                     y += descricaoLines.length * 5;
                 }

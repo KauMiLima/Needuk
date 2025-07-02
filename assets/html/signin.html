@@ -9,24 +9,34 @@
   </head>
   <body>
     <header>
-      <div>
+      <div class="tudo">
+        <div class="logo">
+          <img src="../image/LogoNeeduk.png" alt="">
+        </div>
+        
+        <div class="forms">
+        <div class="titulo">
+          <h1>Bem-vindo de volta!</h1>
+          <p>Faça seu login e vamos começar o trabalho!</p>
+        </div>
+          <label for="usuario">E-mail</label>
+          <input type="text" id="usuario" placeholder="Nome de usuário" />
+          
+          <label for="senha">Senha</label>
+          <div class="input-container">
+            <input type="password" id="senha" placeholder="Senha" />
+            <span id="toggleSenha" class="show-pass">👁️</span>
+          </div>
+          
+          <button id="btnEntrar">Entrar</button>
 
-        <div>
-          <h1>Entrar</h1>
+          <div>
+            <p>Não tem conta? <a href="signup.html">Cadastre-se</a></p>
+            <div id="msgError" class="error"></div>
+          </div>
         </div>
+          
         
-        <label for="usuario">Usuário</label>
-        <input type="text" id="usuario" placeholder="Nome de usuário" />
-        
-        <label for="senha">Senha</label>
-        <div class="input-container">
-          <input type="password" id="senha" placeholder="Senha" />
-          <span id="toggleSenha" class="show-pass">👁️</span>
-        </div>
-        
-        <button id="btnEntrar">Entrar</button>
-        
-        <div id="msgError" class="error"></div>
       </div>
     </header>
 
