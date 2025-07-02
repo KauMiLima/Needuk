@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const userEmailSpan = document.getElementById('userEmail');
     const userPhoneSpan = document.getElementById('userPhone');
     const editProfileBtn = document.getElementById('editProfileBtn');
-    const viewCurriculumBtn = document.getElementById('viewCurriculumBtn');
+    const viewCurriculumBtn = document.getElementById('viewCurriculumBtn'); // Este será o botão para gerar o PDF do currículo
     const btnCriarExp = document.getElementById('criarex');
 
     const experienciasContainer = document.getElementById('experiencias-container');
@@ -12,11 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Dados do Usuário ---
     function loadUserData() {
-        // Agora, pegamos o objeto 'userLogado' do localStorage
         const userLogadoJSON = localStorage.getItem('userLogado');
         
         if (!userLogadoJSON) {
-            // Se não houver usuário logado, redireciona para a página de login
             alert('Nenhum usuário logado. Por favor, faça login.');
             window.location.href = 'signin.html'; // **Confira se este é o caminho correto para sua página de login**
             return;
@@ -34,11 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Agora usamos os dados de currentUserData
         userNameSpan.textContent = currentUserData.nomeCad || 'Não informado';
-        // É crucial que 'emailCad' e 'phoneCad' existam no objeto salvo no localStorage
-        // se você espera que eles apareçam aqui. Se não existirem no seu cadastro original,
-        // eles continuarão como 'Não informado' ou precisarão de um processo de edição.
         userEmailSpan.textContent = currentUserData.emailCad || 'Não informado'; 
         userPhoneSpan.textContent = currentUserData.phoneCad || 'Não informado'; 
     }
@@ -56,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Função para carregar e renderizar as experiências (mantida) ---
+    // Esta função não terá os botões de editar/excluir individualmente, conforme solicitado antes.
     function carregarExperiencias() {
         const experienciasSalvasJSON = localStorage.getItem('experiencias');
         let experiencias = [];
@@ -77,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             noExperiencesMessage.style.display = 'none';
         }
 
-        experiencias.forEach((exp, index) => {
+        experiencias.forEach((exp) => { // Removido 'index' pois não é usado aqui
             const card = document.createElement('div');
             card.className = 'experiencia-card';
 
@@ -117,26 +112,105 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             
             card.appendChild(detalhesContainer);
-
-            const actionsContainer = document.createElement('div');
-            actionsContainer.className = 'experiencia-actions';
-
-            const btnEditar = document.createElement('button');
-            btnEditar.textContent = 'Editar';
-            btnEditar.classList.add('btn-editar');
-            btnEditar.dataset.index = index; 
-            actionsContainer.appendChild(btnEditar);
-
-            const btnExcluir = document.createElement('button');
-            btnExcluir.textContent = 'Excluir';
-            btnExcluir.classList.add('btn-excluir');
-            btnExcluir.dataset.index = index; 
-            actionsContainer.appendChild(btnExcluir);
-
-            card.appendChild(actionsContainer);
-
             experienciasContainer.appendChild(card);
         });
+    }
+
+    // --- Função para Gerar o Currículo Completo em PDF ---
+    // Certifique-se de que a biblioteca jsPDF esteja carregada no seu HTML:
+    // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    function gerarCurriculoPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // --- Dados do Usuário ---
+        const userLogadoJSON = localStorage.getItem('userLogado');
+        let currentUserData = {};
+        if (userLogadoJSON) {
+            try {
+                currentUserData = JSON.parse(userLogadoJSON);
+            } catch (e) {
+                console.error("Erro ao fazer parse dos dados do usuário logado ao gerar PDF:", e);
+            }
+        }
+
+        let y = 10; // Posição Y inicial para o texto
+
+        // Título do Currículo
+        doc.setFontSize(18);
+        doc.text("Currículo Profissional", 10, y);
+        y += 15;
+
+        // --- Informações Pessoais ---
+        doc.setFontSize(12);
+        doc.text("Dados Pessoais:", 10, y);
+        y += 7;
+        doc.text(`Nome: ${currentUserData.nomeCad || 'Não informado'}`, 10, y);
+        y += 7;
+        doc.text(`Email: ${currentUserData.emailCad || 'Não informado'}`, 10, y);
+        y += 7;
+        doc.text(`Telefone: ${currentUserData.phoneCad || 'Não informado'}`, 10, y);
+        y += 15; // Espaço após os dados pessoais
+
+        // --- Experiências Profissionais ---
+        doc.text("Experiências Profissionais:", 10, y);
+        y += 7;
+
+        const experienciasSalvasJSON = localStorage.getItem("experiencias");
+        let experiencias = [];
+
+        if (experienciasSalvasJSON) {
+            try {
+                experiencias = JSON.parse(experienciasSalvasJSON);
+            } catch {
+                experiencias = [];
+            }
+        }
+
+        if (experiencias.length === 0) {
+            doc.text("Nenhuma experiência cadastrada.", 10, y);
+            y += 10;
+        } else {
+            experiencias.forEach((exp) => {
+                // Adiciona uma nova página se o conteúdo exceder a altura
+                if (y > doc.internal.pageSize.height - 30) { // Margem inferior de 30
+                    doc.addPage();
+                    y = 10; // Reinicia Y na nova página
+                }
+
+                const inicioFormatado = formatDate(exp.mesInicio, exp.anoInicio);
+                const terminoFormatado =
+                    exp.mesTermino && exp.anoTermino
+                        ? formatDate(exp.mesTermino, exp.anoTermino)
+                        : "Atual";
+
+                doc.setFontSize(11);
+                doc.text(`- Título: ${exp.titulo}`, 15, y);
+                y += 6;
+                doc.text(`  Tipo: ${exp.tipo}`, 15, y);
+                y += 6;
+                doc.text(`  Período: ${inicioFormatado} - ${terminoFormatado}`, 15, y);
+                y += 6;
+                if (exp.cargaHoraria) {
+                    doc.text(`  Carga Horária: ${exp.cargaHoraria} horas`, 15, y);
+                    y += 6;
+                }
+                if (exp.habilidades) {
+                    const habilidadesLines = doc.splitTextToSize(`  Habilidades: ${exp.habilidades}`, doc.internal.pageSize.width - 30);
+                    doc.text(habilidadesLines, 15, y);
+                    y += habilidadesLines.length * 5;
+                }
+                if (exp.descricao) {
+                    const descricaoLines = doc.splitTextToSize(`  Descrição: ${exp.descricao}`, doc.internal.pageSize.width - 30);
+                    doc.text(descricaoLines, 15, y);
+                    y += descricaoLines.length * 5;
+                }
+                y += 10; // Espaço entre as experiências
+            });
+        }
+
+        // Salva o PDF
+        doc.save("curriculo.pdf");
     }
 
     // --- Listener para o botão "Criar Nova Experiência" ---
@@ -155,50 +229,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // --- Lógica de clique para Editar Experiência (delegação) ---
-    experienciasContainer.addEventListener('click', function (event) {
-        const btnEditarClicado = event.target.closest('.btn-editar');
-        if (btnEditarClicado) {
-            const index = parseInt(btnEditarClicado.dataset.index);
-            window.location.href = `newExp.html?editIndex=${index}`; 
-        }
-    });
-
-    // --- Lógica de clique para Excluir Experiência (delegação) ---
-    experienciasContainer.addEventListener('click', function (event) {
-        const btnExcluirClicado = event.target.closest('.btn-excluir');
-        if (btnExcluirClicado) {
-            const index = parseInt(btnExcluirClicado.dataset.index);
-
-            if (confirm(`Tem certeza que deseja excluir a experiência "${experienciasContainer.children[index].querySelector('h3').textContent}"?`)) {
-                let experiencias = [];
-                const experienciasSalvasJSON = localStorage.getItem('experiencias');
-                if (experienciasSalvasJSON) {
-                    try {
-                        experiencias = JSON.parse(experienciasSalvasJSON);
-                    } catch {
-                        experiencias = [];
-                    }
-                }
-                
-                experiencias.splice(index, 1); 
-                localStorage.setItem('experiencias', JSON.stringify(experiencias));
-                
-                carregarExperiencias();
-                alert("Experiência excluída com sucesso!");
-            }
-        }
-    });
-
     // --- Lógica para o botão "Editar Dados" do Perfil ---
     editProfileBtn.addEventListener('click', function() {
         alert('Aqui você pode redirecionar para uma página de edição de perfil ou abrir um modal para editar os dados pessoais.');
     });
 
-    // --- Lógica para o botão "Ver Currículo" ---
-    viewCurriculumBtn.addEventListener('click', function() {
-        alert('Aqui você pode gerar e exibir o currículo ou redirecionar para uma página de visualização do currículo.');
-    });
+    // --- Lógica para o botão "Ver Currículo" (agora gera o PDF) ---
+    viewCurriculumBtn.addEventListener('click', gerarCurriculoPDF);
 
     // --- Chamadas iniciais ao carregar a página ---
     loadUserData();
