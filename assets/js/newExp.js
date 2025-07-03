@@ -3,19 +3,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const currentYear = new Date().getFullYear();
     const startYear = 1950;
-    const endYear = currentYear + 0;
+    const endYear = currentYear + 0; // Isso significa que o ano final é o ano atual. Se quiser incluir anos futuros, ajuste aqui (ex: currentYear + 5)
 
     const anoInicioSelect = document.getElementById('anoInicio');
     const anoTerminoSelect = document.getElementById('anoTermino');
 
     function populateYears(selectElement) {
         selectElement.innerHTML = '<option value="">Ano</option>';
+        // Popula anos do atual para trás
         for (let year = currentYear; year >= startYear; year--) {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = year;
             selectElement.appendChild(option);
         }
+        // Se 'endYear' for maior que 'currentYear', popula anos futuros
         for (let year = currentYear + 1; year <= endYear; year++) {
             const option = document.createElement('option');
             option.value = year;
@@ -74,12 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const dataInicioObj = new Date(`${anoInicio}-${mesInicio}-01`);
             const dataTerminoObj = new Date(`${anoTermino}-${mesTermino}-01`);
 
-            // Ajusta para o último dia do mês{pronto}
+            // Ajusta para o último dia do mês (pronto)
+            // Se você quer comparar a data exata do mês de início e término,
+            // não precisa ajustar para o último dia do mês.
+            // A comparação abaixo `dataTerminoObj < dataInicioObj` já funciona para o primeiro dia do mês.
+            // Se precisar de mais precisão (e.g., considerar dia exato), seu formulário precisaria de inputs de dia.
+            // Por enquanto, mantenho seu código, que parece querer a comparação do MÊS/ANO
             dataInicioObj.setMonth(dataInicioObj.getMonth() + 1);
             dataInicioObj.setDate(0);
 
             dataTerminoObj.setMonth(dataTerminoObj.getMonth() + 1);
             dataTerminoObj.setDate(0);
+
 
             if (dataTerminoObj < dataInicioObj) {
                 alert("A data de término não pode ser anterior à data de início.");
@@ -98,32 +106,36 @@ document.addEventListener("DOMContentLoaded", function () {
             habilidades,
             descricao
         };
-        
-  //  substituir este bloco localStorage pelo fetch para API{em andamento}
-  /*
-  fetch('', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      nome: nome.value,
-      usuario: usuario.value,
-      senha: senha.value
-    }),
-  })
-  .then(res => {
-    if (!res.ok) throw new Error('Erro ao cadastrar');
-    return res.json();
-  })
-  .then(data => {
-    // Sucesso, tratar resposta da API
-  })
-  .catch(err => {
-    msgError.textContent = err.message;
-  });
-  */
+
+        // *** Bloco fetch para API (MANTIDO COMENTADO para uso futuro) ***
+        /*
+        fetch('SUA_URL_DA_API_AQUI', { // Substitua 'SUA_URL_DA_API_AQUI' pela URL real da sua API
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novaExperiencia), // Envia o objeto novaExperiencia para a API
+        })
+        .then(res => {
+            if (!res.ok) {
+                // Tenta ler a resposta de erro do servidor, se houver
+                return res.json().then(err => { throw new Error(err.message || 'Erro ao salvar experiência na API.'); });
+            }
+            return res.json();
+        })
+        .then(data => {
+            // Sucesso na API, tratar resposta (ex: mostrar mensagem de sucesso da API)
+            console.log("Experiência salva na API com sucesso:", data);
+            alert("Experiência salva com sucesso (via API)!");
+            form.reset(); // Reseta o formulário
+            window.location.href = "dashboard.html"; // Redireciona para o dashboard
+        })
+        .catch(err => {
+            console.error("Erro ao salvar experiência na API:", err);
+            alert("Erro ao salvar experiência: " + err.message); // Mostra o erro da API
+        });
+        */
 
 
-        // Código atual usando localStorage{local sotage}
+        // Código atual usando localStorage (CONTINUA ATIVO)
         let experiencias = [];
         const experienciasSalvasJSON = localStorage.getItem('experiencias');
         if (experienciasSalvasJSON) {
@@ -137,10 +149,9 @@ document.addEventListener("DOMContentLoaded", function () {
         experiencias.push(novaExperiencia);
         localStorage.setItem('experiencias', JSON.stringify(experiencias));
 
-        alert("Experiência salva com sucesso!");
-        form.reset();
+        alert("Experiência salva com sucesso!"); // Alerta de sucesso antes de redirecionar
 
-        // Se quiser redirecionar direto:
-        // window.location.href = "dashboard.html";
+        // Redireciona para o dashboard após salvar no localStorage
+        window.location.href = "dashboard.html";
     });
 });

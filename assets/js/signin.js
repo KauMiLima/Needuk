@@ -5,7 +5,7 @@ const btnEntrar = document.getElementById("btnEntrar");
 const msgError = document.getElementById("msgError");
 const toggleSenha = document.getElementById("toggleSenha");
 
-
+// Alternar visibilidade da senha
 function togglePassword() {
     if (senha.type === "password") {
         senha.type = "text";
@@ -18,12 +18,13 @@ function togglePassword() {
 
 toggleSenha?.addEventListener("click", togglePassword);
 
+// Função de login
 function entrar() {
     msgError.textContent = "";
 
     const listaUser = JSON.parse(localStorage.getItem("listaUser") || "[]");
 
-    // Procura por um usuário que corresponda EXATAMENTE ao e-mail (userCad) E à senha
+    // Verifica se email e senha estão corretos
     const userValid = listaUser.find(
         (u) => u.userCad === usuario.value && u.senhaCad === senha.value
     );
@@ -32,10 +33,14 @@ function entrar() {
         const token =
             Math.random().toString(16).substr(2) +
             Math.random().toString(16).substr(2);
+        
         localStorage.setItem("token", token);
         localStorage.setItem("userLogado", JSON.stringify(userValid));
 
-        alert(`Bem-vindo, ${userValid.nomeCad}!`); 
+        // ✅ Salvar email logado para mensagem de boas-vindas no dashboard
+        localStorage.setItem("loggedInUserEmail", userValid.userCad);
+
+        alert(`Bem-vindo, ${userValid.nomeCad}!`);
         window.location.href = "dashboard.html";
     } else {
         msgError.textContent = "Usuário ou senha incorretos.";
@@ -44,14 +49,13 @@ function entrar() {
 
 btnEntrar?.addEventListener("click", entrar);
 
-// --- Bloco para substituir localStorage pelo fetch para API (ajustado) ---
+// --- Bloco de login com API (opcional - ajustado e comentado) ---
 /*
-// Se a API exigir login APENAS por e-mail e senha:
 fetch('', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-        email: usuario.value, // Enviando o valor do campo 'usuario' como 'email' para a API
+        email: usuario.value,
         senha: senha.value
     }),
 })
@@ -60,9 +64,9 @@ fetch('', {
     return res.json();
 })
 .then(data => {
-    // A API deve retornar os dados do usuário (incluindo nomeCad, userCad, telCad, etc.) e o token
     localStorage.setItem("token", data.token);
-    localStorage.setItem("userLogado", JSON.stringify(data.user)); // data.user deve ter todas as infos
+    localStorage.setItem("userLogado", JSON.stringify(data.user));
+    localStorage.setItem("loggedInUserEmail", data.user.userCad); // Também aqui
 
     alert(`Bem-vindo, ${data.user.nomeCad}!`);
     window.location.href = "dashboard.html";

@@ -1,214 +1,218 @@
 /* Estilos gerais e reset básico para o body */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f2f5; 
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; 
-    box-sizing: border-box; 
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url("../image/Fundo.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 /* Contêiner principal que engloba tudo (logo e formulário) */
 .tudo {
-    display: flex; 
-    flex-direction: row; 
-    align-items: center; 
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    max-width: 900px; 
-    width: 90%; 
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 900px;
+  width: 90%;
+  box-sizing: border-box;
 }
 
 /* Estilo para a seção do logo */
 .logo {
-    flex: 1; 
-    text-align: center;
-    padding-right: 30px; 
+  flex: 1;
+  text-align: center;
+  padding-right: 30px;
 }
 
 .logo img {
-    max-width: 100%; 
-    height: auto;
-    display: block; 
-    margin: 0 auto; 
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 /* Estilo para a seção do formulário */
 .forms {
-    flex: 1; 
-    padding-left: 30px; 
-    border-left: 1px solid #eee; 
-    box-sizing: border-box;
+  flex: 1;
+  padding-left: 30px;
+  border-left: 1px solid #eee;
+  box-sizing: border-box;
 }
 
 .titulo {
-    text-align: center;
-    margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .titulo h1 {
-    font-size: 2.2rem; 
-    color: #333;
-    margin-bottom: 10px;
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 .titulo p {
-    font-size: 1rem;
-    color: #666;
+  font-size: 1rem;
+  color: #666;
 }
 
 /* Estilo para labels e inputs */
 label {
-    display: block; 
-    margin-bottom: 8px;
-    color: #555;
-    font-weight: bold;
-    font-size: 0.95rem;
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: bold;
+  font-size: 0.95rem;
 }
 
 /* Ajuste para inputs gerais */
 input[type="text"],
-input[type="password"] { 
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1rem;
-    margin-bottom: 20px; 
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  margin-bottom: 20px;
 }
 
 /* Contêiner para o input de senha e o ícone de toggle */
 .password-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 0; 
+  position: relative;
+  width: 100%;
+  margin-bottom: 0;
 }
 
 /* O input dentro do password-wrapper não precisa de margin-bottom própria */
 .password-wrapper input {
-    padding-right: 45px; 
+  padding-right: 45px;
 }
 
 .toggle-password {
-    cursor: pointer;
-    position: absolute;
-    right: 15px; 
-    top: 50%;
-    transform: translateY(-50%); 
-    font-size: 1.2rem;
-    color: #888;
-    user-select: none; 
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #888;
+  user-select: none;
 }
 
 /* Estilo para o botão Cadastrar */
 #btnCadastrar {
-    width: 100%; 
-    padding: 15px;
-    background-color: #FEBD59; 
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  width: 100%;
+  padding: 15px;
+  background-color: #febd59;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 /* Estilo para o link "Já tem conta? Fazer Login" */
 .login-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.95rem;
-    color: #666;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #666;
 }
 
 .login-link a {
-    color: #007bff; 
-    text-decoration: none;
-    font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .login-link a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Estilos para as mensagens de erro e sucesso */
 .error-message {
-    color: #dc3545; 
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 15px; 
-    min-height: 1.2em; 
+  color: #dc3545;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+  min-height: 1.2em;
 }
 
 .success-message {
-    color: #28a745; 
-    font-size: 1rem;
-    text-align: center;
-    margin-top: 15px;
-    min-height: 1.2em; 
+  color: #28a745;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 15px;
+  min-height: 1.2em;
 }
-
 
 /* --- Media Queries para Responsividade --- */
 
 /* Para telas de tablets e celulares (largura máxima de 768px) */
 @media (max-width: 768px) {
-    .tudo {
-        flex-direction: column; 
-        padding: 20px; 
-        width: 95%; 
-    }
+  .tudo {
+    flex-direction: column;
+    padding: 20px;
+    width: 95%;
+  }
 
-    .logo {
-        padding-right: 0; 
-        margin-bottom: 20px; 
-    }
+  .logo {
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
 
-    .forms {
-        padding-left: 0;
-        border-left: none;
-        border-top: 1px solid #eee; 
-        padding-top: 20px; 
-    }
+  .forms {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+  }
 
-    .titulo h1 {
-        font-size: 2rem; 
-    }
+  .titulo h1 {
+    font-size: 2rem;
+  }
 }
 
 /* Para telas de celulares menores (largura máxima de 480px) */
 @media (max-width: 480px) {
-    body {
-        padding: 10px; 
-    }
+  body {
+    padding: 10px;
+  }
 
-    .tudo {
-        padding: 15px; 
-        border-radius: 0; 
-        box-shadow: none; 
-    }
+  .tudo {
+    padding: 15px;
+    border-radius: 0;
+    box-shadow: none;
+  }
 
-    .titulo h1 {
-        font-size: 1.8rem; 
-    }
+  .titulo h1 {
+    font-size: 1.8rem;
+  }
 
-    input[type="text"],
-    input[type="password"],
-    #btnCadastrar {
-        padding: 10px; 
-        font-size: 0.9rem;
-    }
+  input[type="text"],
+  input[type="password"],
+  #btnCadastrar {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
 
-    .toggle-password {
-        font-size: 1rem; 
-        right: 10px; 
-    }
+  .toggle-password {
+    font-size: 1rem;
+    right: 10px;
+  }
 }

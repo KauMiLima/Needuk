@@ -17,22 +17,22 @@ function formatarTelefone(event) {
     let value = input.value.replace(/\D/g, ''); // Remove tudo que não é dígito
 
     // Aplica a máscara (XX) XXXXX-XXXX
-    if (value.length > 10) { // Para celular com 9º dígito
+    if (value.length > 10) {
         value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-    } else if (value.length > 6) { // Para telefone fixo ou celular sem 9º dígito
+    } else if (value.length > 6) {
         value = value.replace(/^(\d{2})(\d{4})(\d{4}).*/, '($1) $2-$3');
-    } else if (value.length > 2) { // Para (XX) XXXX
+    } else if (value.length > 2) {
         value = value.replace(/^(\d{2})(\d+).*/, '($1) $2');
-    } else if (value.length > 0) { // Para (XX
+    } else if (value.length > 0) {
         value = value.replace(/^(\d*)/, '($1');
     }
+
     input.value = value;
 }
 
+telefone?.addEventListener("input", formatarTelefone);
 
-telefone?.addEventListener("input", formatarTelefone); 
-
-
+// Alternar visibilidade da senha
 function togglePassword(input, toggleIcon) {
     if (input.type === "password") {
         input.type = "text";
@@ -46,7 +46,7 @@ function togglePassword(input, toggleIcon) {
 toggleSenha?.addEventListener("click", () => togglePassword(senha, toggleSenha));
 toggleConfirmSenha?.addEventListener("click", () => togglePassword(confirmSenha, toggleConfirmSenha));
 
-// Validação
+// Validação dos campos
 function validarCampos() {
     msgError.textContent = "";
     msgSuccess.textContent = "";
@@ -57,15 +57,14 @@ function validarCampos() {
         return false;
     }
 
-    if (email.value.length < 5 || !email.value.includes('@')) { // Validação básica de e-mail
+    if (email.value.length < 5 || !email.value.includes('@')) {
         msgError.textContent = "E-mail inválido.";
         email.focus();
         return false;
     }
 
-    // Validação do campo de telefone (verificando apenas os dígitos)
-    let telefoneNumeros = telefone.value.replace(/\D/g, ''); 
-    if (telefoneNumeros.length < 10 || telefoneNumeros.length > 11) { 
+    let telefoneNumeros = telefone.value.replace(/\D/g, '');
+    if (telefoneNumeros.length < 10 || telefoneNumeros.length > 11) {
         msgError.textContent = "Telefone inválido. Utilize o formato (XX) XXXXX-XXXX.";
         telefone.focus();
         return false;
@@ -86,7 +85,7 @@ function validarCampos() {
     return true;
 }
 
-// Cadastro
+// Cadastro do usuário
 function cadastrar() {
     if (!validarCampos()) return;
 
@@ -100,30 +99,35 @@ function cadastrar() {
 
     listaUser.push({
         nomeCad: nome.value,
-        userCad: email.value, 
-        telCad: telefone.value, 
+        userCad: email.value,
+        telCad: telefone.value,
         senhaCad: senha.value
     });
 
     localStorage.setItem("listaUser", JSON.stringify(listaUser));
 
+    // ✅ Salva o email do usuário logado para dar boas-vindas no dashboard
+    localStorage.setItem("loggedInUserEmail", email.value);
+
     msgSuccess.textContent = "Usuário cadastrado com sucesso! Redirecionando...";
     msgError.textContent = "";
 
+    // Limpa os campos
     nome.value = "";
     email.value = "";
     telefone.value = "";
     senha.value = "";
     confirmSenha.value = "";
 
+    // ✅ Redireciona para o dashboard diretamente
     setTimeout(() => {
-        window.location.href = "signin.html";
+        window.location.href = "dashboard.html";
     }, 2000);
 }
 
 btnCadastrar?.addEventListener("click", cadastrar);
 
-// Bloco para integração com API (mantido comentado)
+// Integração com API (opcional - comentada)
 /*
 fetch('', {
     method: 'POST',

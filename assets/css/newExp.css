@@ -1,37 +1,298 @@
-  /* Seu CSS do formulário aqui (igual antes) */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            max-width: 600px;
-        }
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
-        label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: bold;
-        }
+/* --- Estilos Globais e do Corpo --- */
+html {
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
 
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("../image/Fundo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    font-family: "Roboto", sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
 
-        .date-select-group {
-            display: flex;
-            gap: 10px;
-        }
+/* --- Navigation Bar Styles (COM BOTÃO DE VOLTAR) --- */
+nav {
+    background-color: #ffffff;
+    padding: 12px 20px;
+    width: 100%;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between; /* Mantém a logo na esquerda e o botão na direita */
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-        .date-select-group select {
-            flex-grow: 1;
-            width: auto;
-        }
+/* Estilo para a Logo */
+.nav-logo {
+    height: 50px;
+    width: auto;
+    /* Nenhuma margin-right é necessária aqui, pois space-between já as afasta */
+}
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-        }
+/* Estilo para o Botão de Voltar */
+.back-button {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #8f1fff;
+    font-size: 1.4em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #fff
+}
+
+.back-button .back-icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+}
+
+/* --- Estilo do Título da Página --- */
+h1 {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    width: fit-content;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Estilo do Formulário Principal --- */
+#experienciaForm {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    max-width: 650px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- Estilo para cada Grupo de Input --- */
+#experienciaForm > div {
+    margin-bottom: 0;
+}
+
+/* --- Estilo para Labels --- */
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #444;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+
+/* --- Estilo para Inputs, Selects e Textareas --- */
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #c9d2da;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+    color: #555;
+    background-color: #f8fbfc;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder {
+    color: #999;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* --- Estilo para os Grupos de Seleção de Data --- */
+.date-select-group {
+    display: flex;
+    gap: 15px;
+}
+
+.date-select-group select {
+    flex: 1;
+}
+
+/* --- Estilo do Botão Salvar --- */
+button[type="submit"] {
+    width: 100%;
+    padding: 15px 25px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.15em;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.4);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    nav {
+        padding: 10px 15px;
+        margin-bottom: 15px;
+    }
+
+    .nav-logo {
+        height: 40px;
+    }
+
+    .back-button {
+        padding: 6px 10px;
+        font-size: 0.9em;
+    }
+    .back-button .back-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-bottom: 25px;
+    }
+
+    #experienciaForm {
+        padding: 25px 20px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        gap: 15px;
+    }
+
+    label {
+        font-size: 1em;
+        margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+
+    .date-select-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button[type="submit"] {
+        padding: 12px 20px;
+        font-size: 1.05em;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    nav {
+        padding: 8px 10px;
+        margin-bottom: 10px;
+    }
+
+    .nav-logo {
+        height: 35px;
+    }
+
+    .back-button {
+        padding: 5px 8px;
+        font-size: 0.8em;
+    }
+    .back-button .back-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    #experienciaForm {
+        padding: 20px 15px;
+        border-radius: 8px;
+        gap: 10px;
+    }
+
+    label {
+        font-size: 0.9em;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+
+    button[type="submit"] {
+        padding: 10px 15px;
+        font-size: 1em;
+        margin-top: 10px;
+    }
+}

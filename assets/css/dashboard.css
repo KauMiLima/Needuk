@@ -1,18 +1,41 @@
-/* --- Estilos Globais e do Corpo (Mantidos do último ajuste) --- */
+/* --- Global and Body Styles (Mantidos) --- */
+html {
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
 body {
-    width: 100%;
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    padding: 0;
+    background-image: url("../image/Fundo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
 }
 
-/* --- Estilos da Barra de Navegação (NAV - Mantidos) --- */
+/* --- Navigation Bar Styles (NAV - Adaptado para o efeito) --- */
 nav {
-    background-color: #333;
-    padding: 10px 0;
+    background-color: #ffffff;
+    padding: 12px 20px;
     width: 100%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    height: 50px;
+    width: auto;
+    margin-right: 20px;
 }
 
 nav ul {
@@ -20,163 +43,238 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    /* Remover 'gap' aqui, pois a largura do item vai controlar o espaçamento */
+    /* gap: 25px; */
 }
 
-nav ul li a {
-    color: white;
+nav ul li {
+    margin-right: 15px; /* Espaçamento entre os itens da navbar */
+}
+
+/* Estilo para cada item de link na navbar (.nav-item) */
+.nav-item {
+    display: flex; /* Para alinhar ícone e texto */
+    align-items: center; /* Alinha verticalmente ícone e texto */
     text-decoration: none;
-    padding: 8px 15px;
-    display: block;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    color: #555; /* Cor padrão do ícone e texto (quando visível) */
+    font-weight: 500;
+    height: 40px; /* Altura fixa para todos os itens */
+    overflow: hidden; /* **ESSENCIAL: Esconde o conteúdo que transborda** */
+    white-space: nowrap; /* Impede que o texto quebre linha */
+    border-radius: 6px;
+    background-color: transparent; /* Fundo inicial transparente */
+    transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Anima a largura e outras propriedades */
+    box-shadow: none; /* Sombra inicial */
+
+    /* Largura inicial: apenas o ícone + margem interna */
+    /* Ajuste o valor '40px' para corresponder ao tamanho do seu ícone + padding/margem */
+    width: 40px; /* Largura inicial que mostra apenas o ícone */
+    padding: 0 8px; /* Padding ao redor do ícone */
 }
 
-nav ul li a:hover {
-    background-color: #555;
+/* Estilo do item ao passar o mouse */
+.nav-item:hover {
+    /* Largura final: ícone + texto + espaçamento */
+    /* Você pode precisar ajustar '120px' ou '150px' dependendo do comprimento do texto e tamanho do ícone */
+    width: 120px; /* Aumenta a largura para revelar o texto */
+    color: #8f1fff; /* Cor do texto e ícone ao passar o mouse */
 }
 
-/* --- Novo estilo para o cabeçalho das experiências --- */
+
+/* Estilo do ícone dentro do item */
+.nav-item img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0; 
+    transition: transform 0.3s ease; /* Animação para o ícone */
+}
+
+.nav-item:hover img {
+    transform: scale(1.1); 
+}
+
+/* Estilo do texto dentro do item (inicialmente escondido pela largura do .nav-item) */
+.nav-text {
+    font-size: 1em;
+    margin-left: 8px; 
+}
+
+
+/* --- SEU CÓDIGO EXISTENTE ABAIXO PERMANECE O MESMO --- */
+
+/* ... (restante do seu CSS para .welcome-container, #user-welcome-message,
+   .header-experiencias, #criarex, .experiencia-card, etc.) ... */
+.welcome-container {
+    text-align: center; /* Centraliza o texto */
+    margin-top: 20px; /* Espaço do topo */
+    margin-bottom: 30px; /* Espaço antes do próximo bloco */
+    padding: 15px;
+}
+
+#user-welcome-message {
+    font-size: 2em; /* Tamanho maior para o título */
+    color: #333; /* Cor do texto */
+    font-weight: bold;
+}
+
+/* Você pode adicionar mais estilos para o resto do seu dashboard se precisar */
 .header-experiencias {
-    display: flex; /* Habilita o Flexbox */
-    justify-content: space-between; /* Empurra os itens para os extremos */
-    align-items: center; /* Alinha os itens verticalmente ao centro */
-    margin: 20px auto 30px auto; /* Margens para centralizar e espaçar */
-    max-width: 800px; /* Mesma largura máxima dos cards para alinhamento */
-    padding: 0 20px; /* Padding horizontal para não colar nas bordas */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px; /* Adiciona padding para alinhar com o welcome-container */
+}
+/* ... (rest of your existing CSS for nav ul li a, etc.) ... */
+
+/* --- New style for the experiences header (Refined) --- */
+.header-experiencias {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px auto 30px auto; /* Increased top margin for more breathing room */
+    max-width: 800px;
+    padding: 0 20px;
 }
 
 .header-experiencias h2 {
-    margin: 0; /* Remove a margem padrão do h2 para melhor controle */
-    font-size: 2em; /* Tamanho do título */
-    color: #333; /* Cor do título */
+    margin: 0;
+    font-size: 2.2em; /* Slightly larger title */
+    color: #2c3e50; /* Darker, more prominent title color */
+    border-bottom: 2px solid #007bff; /* A subtle underline for emphasis */
+    padding-bottom: 5px; /* Space between text and underline */
 }
 
-/* --- Estilos do Botão "Criar Nova Experiência" (Ajustados) --- */
+/* --- "Create New Experience" Button Styles (Adjusted) --- */
 #criarex {
-    /* Remove 'display: block;' e 'margin: auto;' pois o Flexbox já controla o posicionamento */
-    padding: 10px 20px; /* Ajusta o padding para ficar melhor ao lado do título */
+    padding: 12px 25px; /* More generous padding */
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px; /* More rounded */
     cursor: pointer;
-    font-size: 1em; /* Ajusta o tamanho da fonte */
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 1.05em; /* Slightly larger font */
+    font-weight: 600; /* Bolder */
+    letter-spacing: 0.5px; /* A little letter spacing for a refined look */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Initial subtle shadow */
 }
 
 #criarex:hover {
     background-color: #218838;
-    transform: translateY(-2px);
+    transform: translateY(-3px); /* More noticeable lift */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
 }
 
-/* --- Estilos dos Cards de Experiência (Mantidos) --- */
+/* --- Experience Card Styles (Refined) --- */
 .experiencia-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin: 15px auto;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0; /* Lighter border color */
+    border-radius: 10px; /* More rounded corners */
+    margin: 20px auto; /* Increased margin for better separation */
     max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Softer, more spread out shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    padding: 20px; /* Added internal padding to cards */
 }
 
 .experiencia-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px); /* More pronounced lift */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
 
-/* Estilo para o título do card (o elemento clicável) */
+/* Style for the card title (the clickable element) */
 .experiencia-card h3 {
     cursor: pointer;
-    color: #333;
+    color: #007bff; /* Primary blue for titles */
     margin-top: 0;
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 1.5em;
+    margin-bottom: 15px; /* Increased bottom margin */
+    padding-bottom: 10px; /* Added padding for the underline */
+    font-size: 1.6em; /* Slightly larger title */
+    border-bottom: 1px solid #eee; /* Subtle underline for clarity */
     transition: color 0.3s ease;
 }
 
 .experiencia-card h3:hover {
-    color: #007bff;
+    color: #0056b3; /* Darker blue on hover */
 }
 
-/* Oculta os detalhes da experiência por padrão */
+/* Hides experience details by default */
 .experiencia-detalhes {
     display: none;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px dashed #ccc;
-    line-height: 1.6;
+    margin-top: 20px; /* Increased top margin */
+    padding-top: 20px; /* Increased padding top */
+    border-top: 1px dashed #dcdcdc; /* Lighter dashed line */
+    line-height: 1.7; /* Increased line height for readability */
+    color: #555; /* Slightly darker text for details */
 }
 
-/* Classe para mostrar os detalhes da experiência */
+/* Class to show experience details */
 .experiencia-detalhes.show {
     display: block;
 }
 
-/* Estilo para os spans de detalhe */
+/* Style for detail spans */
 .detalhe {
-    font-weight: bold;
-    color: #444;
+    font-weight: 600; /* Bolder */
+    color: #333; /* Darker color for emphasized details */
 }
 
-/* --- Estilos para os Botões de Ação (Mantidos) --- */
+/* --- Styles for Action Buttons (Refined) --- */
 .experiencia-actions {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px dashed #eee;
-    text-align: right;
-}
-.experiencia-actions {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px dashed #eee;
+    margin-top: 20px; /* Increased top margin */
+    padding-top: 15px; /* Increased padding top */
+    border-top: 1px solid #eee; /* Solid lighter border */
     text-align: right;
 }
 
 .experiencia-actions button {
-    padding: 8px 15px;
+    padding: 10px 18px; /* More generous padding */
     border: none;
-    border-radius: 5px;
+    border-radius: 6px; /* Slightly more rounded */
     cursor: pointer;
-    font-size: 0.9em;
-    margin-left: 10px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.95em; /* Slightly larger font */
+    margin-left: 12px; /* Increased margin between buttons */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+    font-weight: 500;
 }
 
 .experiencia-actions .btn-editar {
     background-color: #007bff;
     color: white;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
 }
 
 .experiencia-actions .btn-editar:hover {
     background-color: #0056b3;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 .experiencia-actions .btn-excluir {
     background-color: #dc3545;
     color: white;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
 }
 
 .experiencia-actions .btn-excluir:hover {
     background-color: #c82333;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
 }
 
-/* --- Estilo da mensagem de "Nenhuma Experiência" (Mantido) --- */
+/* --- "No Experience" Message Style (Refined) --- */
 #no-experiences-message {
     text-align: center;
-    margin-top: 50px;
-    font-size: 1.1em;
-    color: #666;
-    padding: 20px;
-    border: 1px dashed #ccc;
-    border-radius: 8px;
-    background-color: #fff;
+    margin-top: 60px; /* Increased top margin */
+    font-size: 1.2em; /* Slightly larger font */
+    color: #777; /* Softer gray */
+    padding: 30px; /* Increased padding */
+    border: 1px dashed #d0d0d0; /* Lighter, more subtle dashed border */
+    border-radius: 10px; /* More rounded */
+    background-color: #ffffff;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Added a subtle shadow */
 }

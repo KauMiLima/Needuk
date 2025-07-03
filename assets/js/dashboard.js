@@ -1,40 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
     const btnCriarExp = document.getElementById("criarex");
-    const experienciasContainer = document.getElementById(
-        "experiencias-container"
-    );
-    const noExperiencesMessage = document.getElementById(
-        "no-experiences-message"
-    );
+    const experienciasContainer = document.getElementById("experiencias-container");
+    const noExperiencesMessage = document.getElementById("no-experiences-message");
+    const userWelcomeMessageElement = document.getElementById("user-welcome-message");
 
-    // Listener para o botão de criar experiência (mantido)
+    // ✅ EXIBIR MENSAGEM DE BOAS-VINDAS COM O NOME DO USUÁRIO
+    function displayWelcomeMessage() {
+        const loggedInUserEmail = localStorage.getItem("loggedInUserEmail");
+        const listaUser = JSON.parse(localStorage.getItem("listaUser") || "[]");
+
+        const currentUser = listaUser.find(user => user.userCad === loggedInUserEmail);
+
+        if (currentUser && currentUser.nomeCad) {
+            userWelcomeMessageElement.textContent = `Bem Vindo, ${currentUser.nomeCad}!`;
+        } else {
+            userWelcomeMessageElement.textContent = "Olá!";
+        }
+    }
+
+    // ✅ BOTÃO DE CRIAR EXPERIÊNCIA
     btnCriarExp.addEventListener("click", function () {
         window.location.href = "newExp.html";
     });
 
-    // Função para formatar a data (mantida)
+    // ✅ FORMATAR DATA
     function formatDate(mes, ano) {
         if (!mes || !ano) return "Data não informada";
         const meses = [
-            "Janeiro",
-            "Fevereiro",
-            "Março",
-            "Abril",
-            "Maio",
-            "Junho",
-            "Julho",
-            "Agosto",
-            "Setembro",
-            "Outubro",
-            "Novembro",
-            "Dezembro",
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
         ];
         const mIndex = parseInt(mes, 10) - 1;
         if (mIndex < 0 || mIndex > 11) return "Data inválida";
         return meses[mIndex] + "/" + ano;
     }
 
-    // --- Função para carregar e renderizar as experiências ---
+    // ✅ CARREGAR EXPERIÊNCIAS
     function carregarExperiencias() {
         const experienciasSalvasJSON = localStorage.getItem("experiencias");
         let experiencias = [];
@@ -42,16 +43,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (experienciasSalvasJSON) {
             try {
                 experiencias = JSON.parse(experienciasSalvasJSON);
-            } catch {
+            } catch (e) {
+                console.error("Erro ao fazer parse das experiências salvas:", e);
                 experiencias = [];
             }
         }
 
-        experienciasContainer.innerHTML = ""; // Limpa o contêiner antes de adicionar
+        experienciasContainer.innerHTML = "";
 
         if (experiencias.length === 0) {
             noExperiencesMessage.style.display = "block";
-            return;
         } else {
             noExperiencesMessage.style.display = "none";
         }
@@ -60,13 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const card = document.createElement("div");
             card.className = "experiencia-card";
 
-            // --- Título clicável ---
             const tituloEl = document.createElement("h3");
             tituloEl.textContent = exp.titulo;
-            tituloEl.classList.add("titulo-experiencia"); // Adiciona a classe para o estilo de cursor/hover
+            tituloEl.classList.add("titulo-experiencia");
             card.appendChild(tituloEl);
 
-            // --- Contêiner para os detalhes (inicialmente oculto) ---
             const detalhesContainer = document.createElement("div");
             detalhesContainer.className = "experiencia-detalhes";
 
@@ -74,12 +73,13 @@ document.addEventListener("DOMContentLoaded", function () {
             tipoEl.innerHTML = `<span class="detalhe">Tipo:</span> ${exp.tipo}`;
             detalhesContainer.appendChild(tipoEl);
 
-            const periodoEl = document.createElement("p");
             const inicioFormatado = formatDate(exp.mesInicio, exp.anoInicio);
             const terminoFormatado =
                 exp.mesTermino && exp.anoTermino
                     ? formatDate(exp.mesTermino, exp.anoTermino)
                     : "Atual";
+
+            const periodoEl = document.createElement("p");
             periodoEl.innerHTML = `<span class="detalhe">Período:</span> ${inicioFormatado} - ${terminoFormatado}`;
             detalhesContainer.appendChild(periodoEl);
 
@@ -103,38 +103,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
             card.appendChild(detalhesContainer);
 
-            // --- Adiciona o contêiner para os botões de ação (Editar, Excluir, Gerar PDF) ---
             const actionsContainer = document.createElement("div");
             actionsContainer.className = "experiencia-actions";
 
-            // Adiciona o botão de Editar
             const btnEditar = document.createElement("button");
             btnEditar.textContent = "Editar";
             btnEditar.classList.add("btn-editar");
-            btnEditar.dataset.index = index; // Armazena o índice para identificar a experiência
+            btnEditar.dataset.index = index;
             actionsContainer.appendChild(btnEditar);
 
-            // Adiciona o botão de Excluir
             const btnExcluir = document.createElement("button");
             btnExcluir.textContent = "Excluir";
             btnExcluir.classList.add("btn-excluir");
-            btnExcluir.dataset.index = index; // Armazena o índice para identificar a experiência
+            btnExcluir.dataset.index = index;
             actionsContainer.appendChild(btnExcluir);
 
-            // Adiciona o botão de Gerar PDF
             const btnGerarPDF = document.createElement("button");
             btnGerarPDF.textContent = "Gerar PDF";
             btnGerarPDF.classList.add("btn-gerar-pdf");
             actionsContainer.appendChild(btnGerarPDF);
 
-            card.appendChild(actionsContainer); // Adiciona o contêiner de ações ao card
+            card.appendChild(actionsContainer);
 
-            // --- Lógica para Gerar PDF (mantida) ---
             btnGerarPDF.addEventListener("click", function () {
-                const { jsPDF } = window.jspdf; // Obtém a biblioteca jsPDF
+                const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
-                // Adiciona o conteúdo ao PDF
                 doc.text(`Experiência: ${exp.titulo}`, 10, 10);
                 doc.text(`Tipo: ${exp.tipo}`, 10, 20);
                 doc.text(`Período: ${inicioFormatado} - ${terminoFormatado}`, 10, 30);
@@ -142,9 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     doc.text(`Carga Horária: ${exp.cargaHoraria} horas`, 10, 40);
                 if (exp.habilidades)
                     doc.text(`Habilidades: ${exp.habilidades}`, 10, 50);
-                if (exp.descricao) doc.text(`Descrição: ${exp.descricao}`, 10, 60);
+                if (exp.descricao)
+                    doc.text(`Descrição: ${exp.descricao}`, 10, 60);
 
-                // Salva o PDF
                 doc.save(`experiencia_${exp.titulo}.pdf`);
             });
 
@@ -152,20 +146,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // --- Lógica de clique para expandir/colapsar os detalhes (MANTIDA) ---
+    // ✅ MOSTRAR/ESCONDER DETALHES
     experienciasContainer.addEventListener("click", function (event) {
         const tituloClicado = event.target.closest(".experiencia-card h3");
         if (tituloClicado) {
-            const detalhes = tituloClicado.parentNode.querySelector(
-                ".experiencia-detalhes"
-            );
+            const detalhes = tituloClicado.parentNode.querySelector(".experiencia-detalhes");
             if (detalhes) {
                 detalhes.classList.toggle("show");
             }
         }
     });
 
-    // --- Lógica de clique para Editar Experiência (Delegation) ---
+    // ✅ EDITAR EXPERIÊNCIA
     experienciasContainer.addEventListener("click", function (event) {
         const btnEditarClicado = event.target.closest(".btn-editar");
         if (btnEditarClicado) {
@@ -174,13 +166,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // --- Lógica de clique para Excluir Experiência (Delegation) ---
+    // ✅ EXCLUIR EXPERIÊNCIA
     experienciasContainer.addEventListener("click", function (event) {
         const btnExcluirClicado = event.target.closest(".btn-excluir");
         if (btnExcluirClicado) {
             const index = parseInt(btnExcluirClicado.dataset.index);
 
-            // Confirmação antes de excluir
             if (
                 confirm(
                     `Tem certeza que deseja excluir a experiência "${experienciasContainer.children[index].querySelector("h3").textContent}"?`
@@ -191,19 +182,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (experienciasSalvasJSON) {
                     try {
                         experiencias = JSON.parse(experienciasSalvasJSON);
-                    } catch {
+                    } catch (e) {
+                        console.error("Erro ao fazer parse das experiências salvas ao excluir:", e);
                         experiencias = [];
                     }
                 }
 
-                experiencias.splice(index, 1); // Remove a experiência do array
-                localStorage.setItem("experiencias", JSON.stringify(experiencias)); // Salva o array atualizado
+                experiencias.splice(index, 1);
+                localStorage.setItem("experiencias", JSON.stringify(experiencias));
 
-                carregarExperiencias(); // Recarrega as experiências para atualizar a interface
+                carregarExperiencias();
                 alert("Experiência excluída com sucesso!");
             }
         }
     });
 
+    // ✅ CHAMAR FUNÇÕES INICIAIS
+    displayWelcomeMessage();
     carregarExperiencias();
 });
