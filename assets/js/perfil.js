@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!userLogadoJSON) {
             alert('Nenhum usuário logado. Por favor, faça login.');
-            window.location.href = 'signin.html'; // **Confira se este é o caminho correto para sua página de login**
+            window.location.href = 'index.html'; // **Confira se este é o caminho correto para sua página de login**
             return;
         }
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Erro ao carregar dados do usuário. Por favor, faça login novamente.');
             localStorage.removeItem('userLogado'); // Remove dados corrompidos
             localStorage.removeItem('token'); // Remove o token também
-            window.location.href = 'signin.html';
+            window.location.href = 'index.html';
             return;
         }
 
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Listener para o botão "Criar Nova Experiência" ---
     btnCriarExp.addEventListener('click', function () {
-        window.location.href = 'newExp.html';
+        window.location.href = 'newexp.html';
     });
 
     // --- Lógica de clique para expandir/colapsar os detalhes (delegação) ---
