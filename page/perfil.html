@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil de Usuário</title>
-    <link rel="stylesheet" href="../assets/css/perfil.css"> </head>
-    
+    <link rel="stylesheet" href="./assets/css/perfil.css">
+</head>
+
 <body>
     <nav>
+        <img src="./assets/image/LogoNeedukReduzida.png" alt="Logo" class="nav-logo">
         <ul>
-            <li><a href="dashboard.html">Home</a></li>
-            <li><a href="perfil.html">Perfil</a></li>
-            <li><a href="#">Ver Currículo</a></li>
+            <li>
+                <a href="./dashboard.html" class="nav-item">
+                    <img src="./assets/image/Group 53.png" alt="Ícone Home">
+                    <span class="nav-text">Home</span>
+                </a>
+            </li>
         </ul>
     </nav>
-
     <div class="container">
         <h1>Meu Perfil</h1>
-
+        <div class="profile-section text-center">
+            <button id="viewCurriculumBtn" class="btn-primary btn-large">Ver Currículo</button>
+        </div>
         <div class="profile-section">
             <h2>Dados Pessoais</h2>
             <div class="profile-info">
@@ -27,24 +34,18 @@
             </div>
             <button id="editProfileBtn" class="btn-primary">Editar Dados</button>
         </div>
-
         <div class="header-experiencias">
             <h2>Minhas Experiências</h2>
             <button id="criarex">Criar Nova Experiência</button>
         </div>
-        
-        <div id="experiencias-container">
-            </div>
-
+        <div id="experiencias-container"></div>
         <div id="no-experiences-message" style="display: none;">
-            <p>Nenhuma experiência cadastrada ainda. Clique em "Criar Nova Experiência" para adicionar uma!</p>
-        </div>
-
-        <div class="profile-section text-center">
-            <button id="viewCurriculumBtn" class="btn-primary btn-large">Ver Currículo</button>
+            <p>Nenhuma experiência cadastrada ainda. Clique em "Criar Nova Experiência" para
+                adicionar uma!</p>
         </div>
     </div>
-
-    <script src="../assets/js/perfil.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./assets/js/perfil.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
+
 </html>

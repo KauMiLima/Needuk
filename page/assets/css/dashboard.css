@@ -43,8 +43,7 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    /* Remover 'gap' aqui, pois a largura do item vai controlar o espaçamento */
-    /* gap: 25px; */
+
 }
 
 nav ul li {
@@ -64,20 +63,15 @@ nav ul li {
     border-radius: 6px;
     background-color: transparent; /* Fundo inicial transparente */
     transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Anima a largura e outras propriedades */
-    box-shadow: none; /* Sombra inicial */
-
-    /* Largura inicial: apenas o ícone + margem interna */
-    /* Ajuste o valor '40px' para corresponder ao tamanho do seu ícone + padding/margem */
-    width: 40px; /* Largura inicial que mostra apenas o ícone */
-    padding: 0 8px; /* Padding ao redor do ícone */
+    box-shadow: none; 
+    width: 40px; 
+    padding: 0 8px; 
 }
 
 /* Estilo do item ao passar o mouse */
 .nav-item:hover {
-    /* Largura final: ícone + texto + espaçamento */
-    /* Você pode precisar ajustar '120px' ou '150px' dependendo do comprimento do texto e tamanho do ícone */
-    width: 120px; /* Aumenta a largura para revelar o texto */
-    color: #8f1fff; /* Cor do texto e ícone ao passar o mouse */
+    width: 120px; 
+    color: #8f1fff; 
 }
 
 
@@ -100,10 +94,7 @@ nav ul li {
 }
 
 
-/* --- SEU CÓDIGO EXISTENTE ABAIXO PERMANECE O MESMO --- */
 
-/* ... (restante do seu CSS para .welcome-container, #user-welcome-message,
-   .header-experiencias, #criarex, .experiencia-card, etc.) ... */
 .welcome-container {
     text-align: center; /* Centraliza o texto */
     margin-top: 20px; /* Espaço do topo */
