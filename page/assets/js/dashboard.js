@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ✅ BOTÃO DE CRIAR EXPERIÊNCIA
   btnCriarExp.addEventListener("click", function () {
-    window.location.href = "newExp.html";
+    window.location.href = "newexp.html";
   });
 
   // ✅ FORMATAR DATA
