@@ -2,16 +2,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("experienciaForm");
     const tituloExperiencia = document.getElementById("tituloExperiencia");
     const tipoExperiencia = document.getElementById("tipoExperiencia");
-    // ***** Estes IDs agora se referem aos inputs type="date" *****
     const dataInicioInput = document.getElementById("dataInicio");
     const dataTerminoInput = document.getElementById("dataTermino");
-    // FIM DA MUDANÇA
     const cargaHorariaInput = document.getElementById("cargaHoraria");
     const habilidadesInput = document.getElementById("habilidades");
     const descricaoInput = document.getElementById("descricao");
-    const tituloPagina = document.getElementById("tituloPagina"); // Elemento HTML para o título da página
-
-    
+    const tituloPagina = document.getElementById("tituloPagina");
 
     const API_EXPERIENCIAS_URL = 'https://needuk-6.onrender.com/experiencias';
 
@@ -34,7 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            const data = await response.json();
+            // CORREÇÃO: Verificação do tipo de conteúdo antes de analisar como JSON
+            const contentType = response.headers.get("content-type");
+            let data;
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                throw new Error(text || 'Resposta não é um JSON válido');
+            }
 
             if (!response.ok) {
                 throw new Error(data.message || 'Erro ao carregar dados da experiência para edição.');
@@ -42,10 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             tituloExperiencia.value = data.titulo || '';
             tipoExperiencia.value = data.tipo || '';
-            // Preenchendo inputs de data com valores YYYY-MM-DD recebidos do backend
             dataInicioInput.value = data.dataInicio || '';
             dataTerminoInput.value = data.dataFim || '';
-            
             cargaHorariaInput.value = data.cargaHoraria || '';
             habilidadesInput.value = data.habilidades || '';
             descricaoInput.value = data.descricao || '';
@@ -72,10 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const titulo = tituloExperiencia.value.trim();
         const tipo = tipoExperiencia.value;
-        // Pegando valores dos inputs de data (já são YYYY-MM-DD)
         const dataInicio = dataInicioInput.value;
         const dataTermino = dataTerminoInput.value;
-        
         const cargaHorariaStr = cargaHorariaInput.value.trim();
         const habilidades = habilidadesInput.value.trim();
         const descricao = descricaoInput.value.trim();
@@ -91,7 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage += "• O tipo de experiência é obrigatório.\n";
             isValid = false;
         }
-        // Validação de data mais simples para input type="date"
         if (!dataInicio) {
             errorMessage += "• A data de início é obrigatória.\n";
             isValid = false;
@@ -111,7 +110,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // Validação de período de data
         if (dataInicio && dataTermino) {
             const inicioObj = new Date(dataInicio);
             const terminoObj = new Date(dataTermino);
@@ -125,9 +123,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const experienciaData = {
             titulo,
             tipo,
-            // Envia datas como YYYY-MM-DD
             dataInicio,
-            dataFim: dataTermino || null, // Envia "YYYY-MM-DD" ou null
+            dataFim: dataTermino || null,
             cargaHoraria: cargaHorariaNum,
             habilidades,
             descricao
@@ -158,7 +155,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify(experienciaData),
             });
 
-            const data = await response.json();
+            // CORREÇÃO: Verificação do tipo de conteúdo antes de analisar como JSON
+            const contentType = response.headers.get("content-type");
+            let data;
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                data = { message: text || `Erro desconhecido. Status: ${response.status}` };
+            }
 
             if (!response.ok) {
                 throw new Error(data.message || data.error || `Erro ao ${experienciaIdParaEdicao ? 'atualizar' : 'criar'} experiência.`);
