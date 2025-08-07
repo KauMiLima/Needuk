@@ -1,46 +1,84 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("experienciaForm");
+    const tituloExperiencia = document.getElementById("tituloExperiencia");
+    const tipoExperiencia = document.getElementById("tipoExperiencia");
+    // ***** Estes IDs agora se referem aos inputs type="date" *****
+    const dataInicioInput = document.getElementById("dataInicio");
+    const dataTerminoInput = document.getElementById("dataTermino");
+    // FIM DA MUDANÇA
+    const cargaHorariaInput = document.getElementById("cargaHoraria");
+    const habilidadesInput = document.getElementById("habilidades");
+    const descricaoInput = document.getElementById("descricao");
+    const tituloPagina = document.getElementById("tituloPagina"); // Elemento HTML para o título da página
 
-    const currentYear = new Date().getFullYear();
-    const startYear = 1950;
-    const endYear = currentYear + 0; // Isso significa que o ano final é o ano atual. Se quiser incluir anos futuros, ajuste aqui (ex: currentYear + 5)
+    
 
-    const anoInicioSelect = document.getElementById('anoInicio');
-    const anoTerminoSelect = document.getElementById('anoTermino');
+    const API_EXPERIENCIAS_URL = 'https://needuk-6.onrender.com/experiencias';
 
-    function populateYears(selectElement) {
-        selectElement.innerHTML = '<option value="">Ano</option>';
-        // Popula anos do atual para trás
-        for (let year = currentYear; year >= startYear; year--) {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            selectElement.appendChild(option);
+    let experienciaIdParaEdicao = null;
+
+    async function carregarExperienciaParaEdicao(id) {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Você precisa estar logado para editar experiências. Redirecionando...");
+            window.location.href = "index.html";
+            return;
         }
-        // Se 'endYear' for maior que 'currentYear', popula anos futuros
-        for (let year = currentYear + 1; year <= endYear; year++) {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            selectElement.appendChild(option);
+
+        try {
+            const response = await fetch(`${API_EXPERIENCIAS_URL}/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erro ao carregar dados da experiência para edição.');
+            }
+
+            tituloExperiencia.value = data.titulo || '';
+            tipoExperiencia.value = data.tipo || '';
+            // Preenchendo inputs de data com valores YYYY-MM-DD recebidos do backend
+            dataInicioInput.value = data.dataInicio || '';
+            dataTerminoInput.value = data.dataFim || '';
+            
+            cargaHorariaInput.value = data.cargaHoraria || '';
+            habilidadesInput.value = data.habilidades || '';
+            descricaoInput.value = data.descricao || '';
+
+            tituloPagina.textContent = "Editar Experiência";
+            experienciaIdParaEdicao = id;
+        } catch (error) {
+            console.error("Erro ao carregar experiência para edição:", error);
+            alert(`Não foi possível carregar a experiência para edição: ${error.message}`);
+            window.location.href = "dashboard.html";
         }
     }
 
-    populateYears(anoInicioSelect);
-    populateYears(anoTerminoSelect);
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+        carregarExperienciaParaEdicao(editId);
+    } else {
+        tituloPagina.textContent = "Criar Nova Experiência";
+    }
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        const titulo = document.getElementById("tituloExperiencia").value.trim();
-        const tipo = document.getElementById("tipoExperiencia").value;
-        const mesInicio = document.getElementById("mesInicio").value;
-        const anoInicio = document.getElementById("anoInicio").value;
-        const mesTermino = document.getElementById("mesTermino").value;
-        const anoTermino = document.getElementById("anoTermino").value;
-        const cargaHorariaStr = document.getElementById("cargaHoraria").value.trim();
-        const habilidades = document.getElementById("habilidades").value.trim();
-        const descricao = document.getElementById("descricao").value.trim();
+        const titulo = tituloExperiencia.value.trim();
+        const tipo = tipoExperiencia.value;
+        // Pegando valores dos inputs de data (já são YYYY-MM-DD)
+        const dataInicio = dataInicioInput.value;
+        const dataTermino = dataTerminoInput.value;
+        
+        const cargaHorariaStr = cargaHorariaInput.value.trim();
+        const habilidades = habilidadesInput.value.trim();
+        const descricao = descricaoInput.value.trim();
 
         let isValid = true;
         let errorMessage = "Por favor, corrija os seguintes erros:\n";
@@ -53,8 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage += "• O tipo de experiência é obrigatório.\n";
             isValid = false;
         }
-        if (!mesInicio || !anoInicio) {
-            errorMessage += "• A data de início (mês e ano) é obrigatória.\n";
+        // Validação de data mais simples para input type="date"
+        if (!dataInicio) {
+            errorMessage += "• A data de início é obrigatória.\n";
             isValid = false;
         }
 
@@ -72,86 +111,65 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        if (mesTermino && anoTermino) {
-            const dataInicioObj = new Date(`${anoInicio}-${mesInicio}-01`);
-            const dataTerminoObj = new Date(`${anoTermino}-${mesTermino}-01`);
+        // Validação de período de data
+        if (dataInicio && dataTermino) {
+            const inicioObj = new Date(dataInicio);
+            const terminoObj = new Date(dataTermino);
 
-            // Ajusta para o último dia do mês (pronto)
-            // Se você quer comparar a data exata do mês de início e término,
-            // não precisa ajustar para o último dia do mês.
-            // A comparação abaixo `dataTerminoObj < dataInicioObj` já funciona para o primeiro dia do mês.
-            // Se precisar de mais precisão (e.g., considerar dia exato), seu formulário precisaria de inputs de dia.
-            // Por enquanto, mantenho seu código, que parece querer a comparação do MÊS/ANO
-            dataInicioObj.setMonth(dataInicioObj.getMonth() + 1);
-            dataInicioObj.setDate(0);
-
-            dataTerminoObj.setMonth(dataTerminoObj.getMonth() + 1);
-            dataTerminoObj.setDate(0);
-
-
-            if (dataTerminoObj < dataInicioObj) {
+            if (terminoObj < inicioObj) {
                 alert("A data de término não pode ser anterior à data de início.");
                 return;
             }
         }
 
-        const novaExperiencia = {
+        const experienciaData = {
             titulo,
             tipo,
-            mesInicio,
-            anoInicio,
-            mesTermino,
-            anoTermino,
+            // Envia datas como YYYY-MM-DD
+            dataInicio,
+            dataFim: dataTermino || null, // Envia "YYYY-MM-DD" ou null
             cargaHoraria: cargaHorariaNum,
             habilidades,
             descricao
         };
 
-        // *** Bloco fetch para API (MANTIDO COMENTADO para uso futuro) ***
-        /*
-        fetch('SUA_URL_DA_API_AQUI', { // Substitua 'SUA_URL_DA_API_AQUI' pela URL real da sua API
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(novaExperiencia), // Envia o objeto novaExperiencia para a API
-        })
-        .then(res => {
-            if (!res.ok) {
-                // Tenta ler a resposta de erro do servidor, se houver
-                return res.json().then(err => { throw new Error(err.message || 'Erro ao salvar experiência na API.'); });
-            }
-            return res.json();
-        })
-        .then(data => {
-            // Sucesso na API, tratar resposta (ex: mostrar mensagem de sucesso da API)
-            console.log("Experiência salva na API com sucesso:", data);
-            alert("Experiência salva com sucesso (via API)!");
-            form.reset(); // Reseta o formulário
-            window.location.href = "dashboard.html"; // Redireciona para o dashboard
-        })
-        .catch(err => {
-            console.error("Erro ao salvar experiência na API:", err);
-            alert("Erro ao salvar experiência: " + err.message); // Mostra o erro da API
-        });
-        */
-
-
-        // Código atual usando localStorage (CONTINUA ATIVO)
-        let experiencias = [];
-        const experienciasSalvasJSON = localStorage.getItem('experiencias');
-        if (experienciasSalvasJSON) {
-            try {
-                experiencias = JSON.parse(experienciasSalvasJSON);
-            } catch {
-                experiencias = [];
-            }
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Você não está autenticado. Por favor, faça login novamente.");
+            window.location.href = "index.html";
+            return;
         }
 
-        experiencias.push(novaExperiencia);
-        localStorage.setItem('experiencias', JSON.stringify(experiencias));
+        let method = 'POST';
+        let url = API_EXPERIENCIAS_URL;
 
-        alert("Experiência salva com sucesso!"); // Alerta de sucesso antes de redirecionar
+        if (experienciaIdParaEdicao) {
+            method = 'PUT';
+            url = `${API_EXPERIENCIAS_URL}/${experienciaIdParaEdicao}`;
+        }
 
-        // Redireciona para o dashboard após salvar no localStorage
-        window.location.href = "dashboard.html";
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(experienciaData),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || data.error || `Erro ao ${experienciaIdParaEdicao ? 'atualizar' : 'criar'} experiência.`);
+            }
+
+            alert(`Experiência ${experienciaIdParaEdicao ? 'atualizada' : 'criada'} com sucesso!`);
+            form.reset();
+            window.location.href = "dashboard.html";
+        } catch (error) {
+            console.error("Erro na operação da API:", error);
+            alert(`Erro ao ${experienciaIdParaEdicao ? 'atualizar' : 'criar'} experiência: ` + error.message);
+        }
     });
 });

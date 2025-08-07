@@ -4,19 +4,42 @@ document.addEventListener('DOMContentLoaded', function () {
     const userEmailSpan = document.getElementById('userEmail');
     const userPhoneSpan = document.getElementById('userPhone');
     const editProfileBtn = document.getElementById('editProfileBtn');
-    const viewCurriculumBtn = document.getElementById('viewCurriculumBtn'); // Este será o botão para gerar o PDF do currículo
-    const btnCriarExp = document.getElementById('criarex');
+    const viewCurriculumBtn = document.getElementById('viewCurriculumBtn');
 
     const experienciasContainer = document.getElementById('experiencias-container');
     const noExperiencesMessage = document.getElementById('no-experiences-message');
 
+    const API_EXPERIENCIAS_URL = 'https://needuk-6.onrender.com/experiencias';
+
+    // **** NOVA FUNÇÃO: Formata o número de telefone para o padrão brasileiro ****
+    function formatPhoneNumber(phoneNumber) {
+        if (!phoneNumber) return 'Não informado';
+        // Remove todos os caracteres não numéricos
+        const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+        
+        // Aplica a máscara: (DD) XXXXX-XXXX ou (DD) XXXX-XXXX
+        // 11 dígitos para celular com 9 na frente (ex: 99 91234-5678)
+        if (cleaned.length === 11) {
+            return `(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 7)}-${cleaned.substring(7, 11)}`;
+        } 
+        // 10 dígitos para celular antigo ou fixo (ex: 99 1234-5678)
+        else if (cleaned.length === 10) {
+            return `(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 6)}-${cleaned.substring(6, 10)}`;
+        } 
+        // Se tiver outro tamanho, retorna sem formatação ou com uma mensagem de erro
+        else {
+            return phoneNumber; // Retorna o número original se não se encaixar nos padrões
+        }
+    }
+    // **** FIM DA NOVA FUNÇÃO ****
+
     // --- Dados do Usuário ---
-    function loadUserData() {
+    async function loadUserData() {
         const userLogadoJSON = localStorage.getItem('userLogado');
 
         if (!userLogadoJSON) {
             alert('Nenhum usuário logado. Por favor, faça login.');
-            window.location.href = 'index.html'; // **Confira se este é o caminho correto para sua página de login**
+            window.location.href = 'index.html';
             return;
         }
 
@@ -26,106 +49,138 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (e) {
             console.error("Erro ao fazer parse dos dados do usuário logado:", e);
             alert('Erro ao carregar dados do usuário. Por favor, faça login novamente.');
-            localStorage.removeItem('userLogado'); // Remove dados corrompidos
-            localStorage.removeItem('token'); // Remove o token também
+            localStorage.removeItem('userLogado');
+            localStorage.removeItem('token');
             window.location.href = 'index.html';
             return;
         }
 
-        // --- CORREÇÃO AQUI ---
-        // As propriedades corretas salvas no localStorage são: nomeCad, userCad (para email), telCad
-        userNameSpan.textContent = currentUserData.nomeCad || 'Não informado';
-        userEmailSpan.textContent = currentUserData.userCad || 'Não informado'; // Use userCad para o e-mail
-        userPhoneSpan.textContent = currentUserData.telCad || 'Não informado';   // Use telCad para o telefone
-        // --- FIM DA CORREÇÃO ---
+        userNameSpan.textContent = currentUserData.nome || 'Não informado';
+        userEmailSpan.textContent = currentUserData.email || 'Não informado';
+        // **** MUDANÇA AQUI: Usa a nova função para formatar o telefone ****
+        userPhoneSpan.textContent = formatPhoneNumber(currentUserData.telefone);
     }
 
-    // --- Função para formatar a data (mantida) ---
-    function formatDate(mes, ano) {
-        if (!mes || !ano) return 'Data não informada';
-        const meses = [
-            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-        ];
-        const mIndex = parseInt(mes, 10) - 1;
-        if (mIndex < 0 || mIndex > 11) return 'Data inválida';
-        return meses[mIndex] + '/' + ano;
+    // --- Função para formatar a data (Mantida como ajustada anteriormente para YYYY-MM-DD) ---
+    function formatDate(isoDateString) { // Ex: "2023-01-15"
+        if (!isoDateString) return "Data não informada";
+        
+        try {
+            const date = new Date(isoDateString + "T00:00:00");
+            const meses = [
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+            ];
+            const mesNome = meses[date.getMonth()];
+            const ano = date.getFullYear();
+            return `${mesNome}/${ano}`;
+        } catch (e) {
+            console.error("Erro ao formatar data:", isoDateString, e);
+            return "Data inválida";
+        }
     }
 
-    // --- Função para carregar e renderizar as experiências (mantida) ---
-    function carregarExperiencias() {
-        const experienciasSalvasJSON = localStorage.getItem('experiencias');
-        let experiencias = [];
+    // --- Função para carregar e renderizar as experiências DA API (Mantida) ---
+    async function carregarExperiencias() {
+        experienciasContainer.innerHTML = '';
+        noExperiencesMessage.textContent = 'Carregando experiências...';
+        noExperiencesMessage.style.display = 'block';
 
-        if (experienciasSalvasJSON) {
-            try {
-                experiencias = JSON.parse(experienciasSalvasJSON);
-            } catch {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            noExperiencesMessage.textContent = 'Você precisa estar logado para ver suas experiências.';
+            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+            return;
+        }
+
+        try {
+            const response = await fetch(API_EXPERIENCIAS_URL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erro ao carregar experiências da API.');
+            }
+
+            let experiencias = data.experiencias || data;
+
+            if (!Array.isArray(experiencias)) {
+                console.error("A API não retornou um array de experiências:", experiencias);
                 experiencias = [];
             }
-        }
 
-        experienciasContainer.innerHTML = '';
+            if (experiencias.length === 0) {
+                noExperiencesMessage.textContent = 'Você ainda não tem experiências cadastradas.';
+                noExperiencesMessage.style.display = 'block';
+            } else {
+                noExperiencesMessage.style.display = 'none';
+            }
 
-        if (experiencias.length === 0) {
+            localStorage.setItem("experienciasAPI", JSON.stringify(experiencias));
+
+
+            experiencias.forEach((exp) => {
+                const card = document.createElement('div');
+                card.className = 'experiencia-card';
+
+                const tituloEl = document.createElement('h3');
+                tituloEl.textContent = exp.titulo;
+                card.appendChild(tituloEl);
+
+                const detalhesContainer = document.createElement('div');
+                detalhesContainer.className = 'experiencia-detalhes';
+
+                const tipoEl = document.createElement('p');
+                tipoEl.innerHTML = `<span class="detalhe">Tipo:</span> ${exp.tipo}`;
+                detalhesContainer.appendChild(tipoEl);
+
+                const inicioFormatado = formatDate(exp.dataInicio);
+                const terminoFormatado = exp.dataFim ? formatDate(exp.dataFim) : "Atual";
+
+                const periodoEl = document.createElement('p');
+                periodoEl.innerHTML = `<span class="detalhe">Período:</span> ${inicioFormatado} - ${terminoFormatado}`;
+                detalhesContainer.appendChild(periodoEl);
+
+                if (exp.cargaHoraria) {
+                    const cargaEl = document.createElement('p');
+                    cargaEl.innerHTML = `<span class="detalhe">Carga horária:</span> ${exp.cargaHoraria} horas`;
+                    detalhesContainer.appendChild(cargaEl);
+                }
+
+                if (exp.habilidades) {
+                    const habsEl = document.createElement('p');
+                    habsEl.innerHTML = `<span class="detalhe">Habilidades:</span> ${exp.habilidades}`;
+                    detalhesContainer.appendChild(habsEl);
+                }
+
+                if (exp.descricao) {
+                    const descEl = document.createElement('p');
+                    descEl.innerHTML = `<span class="detalhe">Descrição:</span> ${exp.descricao}`;
+                    detalhesContainer.appendChild(descEl);
+                }
+
+                card.appendChild(detalhesContainer);
+                experienciasContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error("Erro ao carregar experiências:", error);
+            noExperiencesMessage.textContent = `Erro ao carregar experiências: ${error.message}`;
             noExperiencesMessage.style.display = 'block';
-            return;
-        } else {
-            noExperiencesMessage.style.display = 'none';
         }
-
-        experiencias.forEach((exp) => { // Removido 'index' pois não é usado aqui
-            const card = document.createElement('div');
-            card.className = 'experiencia-card';
-
-            const tituloEl = document.createElement('h3');
-            tituloEl.textContent = exp.titulo;
-            card.appendChild(tituloEl);
-
-            const detalhesContainer = document.createElement('div');
-            detalhesContainer.className = 'experiencia-detalhes';
-
-            const tipoEl = document.createElement('p');
-            tipoEl.innerHTML = `<span class="detalhe">Tipo:</span> ${exp.tipo}`;
-            detalhesContainer.appendChild(tipoEl);
-
-            const periodoEl = document.createElement('p');
-            const inicioFormatado = formatDate(exp.mesInicio, exp.anoInicio);
-            const terminoFormatado = (exp.mesTermino && exp.anoTermino) ? formatDate(exp.mesTermino, exp.anoTermino) : 'Atual';
-            periodoEl.innerHTML = `<span class="detalhe">Período:</span> ${inicioFormatado} - ${terminoFormatado}`;
-            detalhesContainer.appendChild(periodoEl);
-
-            if (exp.cargaHoraria) {
-                const cargaEl = document.createElement('p');
-                cargaEl.innerHTML = `<span class="detalhe">Carga horária:</span> ${exp.cargaHoraria} horas`;
-                detalhesContainer.appendChild(cargaEl);
-            }
-
-            if (exp.habilidades) {
-                const habsEl = document.createElement('p');
-                habsEl.innerHTML = `<span class="detalhe">Habilidades:</span> ${exp.habilidades}`;
-                detalhesContainer.appendChild(habsEl);
-            }
-
-            if (exp.descricao) {
-                const descEl = document.createElement('p');
-                descEl.innerHTML = `<span class="detalhe">Descrição:</span> ${exp.descricao}`;
-                detalhesContainer.appendChild(descEl);
-            }
-
-            card.appendChild(detalhesContainer);
-            experienciasContainer.appendChild(card);
-        });
     }
 
-    // --- Função para Gerar o Currículo Completo em PDF ---
-    // Certifique-se de que a biblioteca jsPDF esteja carregada no seu HTML:
-    // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    // --- Gerar Currículo PDF ---
     function gerarCurriculoPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // --- Dados do Usuário ---
+        // --- Dados do Usuário para o PDF ---
         const userLogadoJSON = localStorage.getItem('userLogado');
         let currentUserData = {};
         if (userLogadoJSON) {
@@ -136,55 +191,52 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        let y = 10; // Posição Y inicial para o texto
+        let y = 10;
 
-        // Título do Currículo
         doc.setFontSize(18);
         doc.text("Currículo Profissional", 10, y);
         y += 15;
 
-        // --- Informações Pessoais ---
+        // --- Informações Pessoais para o PDF ---
         doc.setFontSize(12);
         doc.text("Dados Pessoais:", 10, y);
         y += 7;
-        doc.text(`Nome: ${currentUserData.nomeCad || 'Não informado'}`, 10, y);
+        doc.text(`Nome: ${currentUserData.nome || 'Não informado'}`, 10, y);
         y += 7;
-        doc.text(`Email: ${currentUserData.userCad || 'Não informado'}`, 10, y); // Use userCad para o e-mail no PDF
+        doc.text(`Email: ${currentUserData.email || 'Não informado'}`, 10, y);
         y += 7;
-        doc.text(`Telefone: ${currentUserData.telCad || 'Não informado'}`, 10, y); // Use telCad para o telefone no PDF
-        y += 15; // Espaço após os dados pessoais
+        // **** MUDANÇA AQUI: Usa a nova função para formatar o telefone no PDF ****
+        doc.text(`Telefone: ${formatPhoneNumber(currentUserData.telefone)}`, 10, y);
+        // **** FIM DA MUDANÇA ****
+        y += 15;
 
-        // --- Experiências Profissionais ---
+        // --- Experiências Profissionais para o PDF ---
         doc.text("Experiências Profissionais:", 10, y);
         y += 7;
 
-        const experienciasSalvasJSON = localStorage.getItem("experiencias");
-        let experiencias = [];
+        const experienciasSalvasPDF = localStorage.getItem("experienciasAPI");
+        let experienciasParaPDF = [];
 
-        if (experienciasSalvasJSON) {
+        if (experienciasSalvasPDF) {
             try {
-                experiencias = JSON.parse(experienciasSalvasJSON);
+                experienciasParaPDF = JSON.parse(experienciasSalvasPDF);
             } catch {
-                experiencias = [];
+                experienciasParaPDF = [];
             }
         }
 
-        if (experiencias.length === 0) {
+        if (experienciasParaPDF.length === 0) {
             doc.text("Nenhuma experiência cadastrada.", 10, y);
             y += 10;
         } else {
-            experiencias.forEach((exp) => {
-                // Adiciona uma nova página se o conteúdo exceder a altura
-                if (y > doc.internal.pageSize.height - 30) { // Margem inferior de 30
+            experienciasParaPDF.forEach((exp) => {
+                if (y > doc.internal.pageSize.height - 30) {
                     doc.addPage();
-                    y = 10; // Reinicia Y na nova página
+                    y = 10;
                 }
 
-                const inicioFormatado = formatDate(exp.mesInicio, exp.anoInicio);
-                const terminoFormatado =
-                    exp.mesTermino && exp.anoTermino
-                        ? formatDate(exp.mesTermino, exp.anoTermino)
-                        : "Atual";
+                const inicioFormatado = formatDate(exp.dataInicio);
+                const terminoFormatado = exp.dataFim ? formatDate(exp.dataFim) : "Atual";
 
                 doc.setFontSize(11);
                 doc.text(`- Título: ${exp.titulo}`, 15, y);
@@ -207,18 +259,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     doc.text(descricaoLines, 15, y);
                     y += descricaoLines.length * 5;
                 }
-                y += 10; // Espaço entre as experiências
+                y += 10;
             });
         }
 
-        // Salva o PDF
         doc.save("curriculo.pdf");
     }
-
-    // --- Listener para o botão "Criar Nova Experiência" ---
-    btnCriarExp.addEventListener('click', function () {
-        window.location.href = 'newexp.html';
-    });
 
     // --- Lógica de clique para expandir/colapsar os detalhes (delegação) ---
     experienciasContainer.addEventListener('click', function (event) {

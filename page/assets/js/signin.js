@@ -9,69 +9,64 @@ const toggleSenha = document.getElementById("toggleSenha");
 function togglePassword() {
     if (senha.type === "password") {
         senha.type = "text";
-        toggleSenha.textContent = "🙈";
+        toggleSenha.innerHTML = "<i class=\"fa-solid fa-eye-slash\"></i>";
     } else {
         senha.type = "password";
-        toggleSenha.textContent = "👁️";
+        toggleSenha.innerHTML = "<i class=\"fa-solid fa-eye\"></i>";
     }
 }
 
 toggleSenha?.addEventListener("click", togglePassword);
 
 // Função de login
-function entrar() {
-    msgError.textContent = "";
+async function entrar() { // Torna a função assíncrona
+    msgError.textContent = ""; // Limpa a mensagem de erro anterior
 
-    const listaUser = JSON.parse(localStorage.getItem("listaUser") || "[]");
+    // Desabilita o botão para evitar cliques múltiplos
+    btnEntrar.disabled = true;
+    msgError.textContent = "Fazendo login..."; // Feedback para o usuário
 
-    // Verifica se email e senha estão corretos
-    const userValid = listaUser.find(
-        (u) => u.userCad === usuario.value && u.senhaCad === senha.value
-    );
+    try {
+        const response = await fetch('https://needuk-6.onrender.com/usuarios/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: usuario.value,
+                senha: senha.value
+            }),
+        });
 
-    if (userValid) {
-        const token =
-            Math.random().toString(16).substr(2) +
-            Math.random().toString(16).substr(2);
-        
-        localStorage.setItem("token", token);
-        localStorage.setItem("userLogado", JSON.stringify(userValid));
+        const data = await response.json(); // Tenta sempre ler o JSON da resposta
 
-        // ✅ Salvar email logado para mensagem de boas-vindas no dashboard
-        localStorage.setItem("loggedInUserEmail", userValid.userCad);
+        if (!response.ok) {
+            // Se a resposta não for OK (status 4xx, 5xx), é um erro do servidor
+            throw new Error(data.message || data.error || 'Erro ao fazer login. Verifique suas credenciais.');
+        }
 
-        alert(`Bem-vindo, ${userValid.nomeCad}!`);
-        window.location.href = "dashboard.html";
-    } else {
-        msgError.textContent = "Usuário ou senha incorretos.";
+        // Sucesso no login!
+        // A API deve retornar um token e um objeto 'usuarioDTO' com 'id', 'nome', 'email' e 'telefone'.
+        // **** MUDANÇAS AQUI: data.user foi alterado para data.usuarioDTO ****
+        if (data && data.token && data.usuarioDTO && data.usuarioDTO.email) {
+            localStorage.setItem("token", data.token); // Salva o token JWT
+            // Salva o objeto do usuário DTO completo (incluindo nome, email, telefone)
+            localStorage.setItem("userLogado", JSON.stringify(data.usuarioDTO));
+            // Salva apenas o email para compatibilidade se necessário
+            localStorage.setItem("loggedInUserEmail", data.usuarioDTO.email);
+
+            alert(`Bem-vindo(a), ${data.usuarioDTO.nome || data.usuarioDTO.email}!`); // Mensagem de boas-vindas
+            window.location.href = "dashboard.html"; // Redireciona
+        } else {
+            // Se a API retornar sucesso (200 OK) mas sem os dados esperados
+            throw new Error("Resposta da API incompleta. Não foi possível obter todos os dados do usuário.");
+        }
+    } catch (err) {
+        console.error("Erro na requisição de login:", err);
+        msgError.textContent = err.message; // Exibe a mensagem de erro
+    } finally {
+        btnEntrar.disabled = false; // Reabilita o botão
     }
 }
 
 btnEntrar?.addEventListener("click", entrar);
-
-// --- Bloco de login com API (opcional - ajustado e comentado) ---
-/*
-fetch('', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        email: usuario.value,
-        senha: senha.value
-    }),
-})
-.then(res => {
-    if (!res.ok) throw new Error('Erro ao fazer login. Verifique suas credenciais.');
-    return res.json();
-})
-.then(data => {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("userLogado", JSON.stringify(data.user));
-    localStorage.setItem("loggedInUserEmail", data.user.userCad); // Também aqui
-
-    alert(`Bem-vindo, ${data.user.nomeCad}!`);
-    window.location.href = "dashboard.html";
-})
-.catch(err => {
-    msgError.textContent = err.message;
-});
-*/

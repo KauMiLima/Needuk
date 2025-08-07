@@ -35,7 +35,7 @@ nav {
     top: 0;
     z-index: 1000;
     display: flex;
-    justify-content: space-between; /* Mantém a logo na esquerda e o botão na direita */
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
@@ -44,7 +44,6 @@ nav {
 .nav-logo {
     height: 50px;
     width: auto;
-    /* Nenhuma margin-right é necessária aqui, pois space-between já as afasta */
 }
 
 /* Estilo para o Botão de Voltar */
@@ -60,7 +59,7 @@ nav {
 }
 
 .back-button:hover {
-    background-color: #fff
+    background-color: #f0f0f0; /* Um hover sutil */
 }
 
 .back-button .back-icon {
@@ -100,7 +99,7 @@ h1 {
 
 /* --- Estilo para cada Grupo de Input --- */
 #experienciaForm > div {
-    margin-bottom: 0;
+    margin-bottom: 0; /* Ajustado para usar o gap do flexbox */
 }
 
 /* --- Estilo para Labels --- */
@@ -112,9 +111,10 @@ label {
     font-size: 1.05em;
 }
 
-/* --- Estilo para Inputs, Selects e Textareas --- */
+/* --- Estilo para Inputs (text, number, date), Selects e Textareas --- */
 input[type="text"],
 input[type="number"],
+input[type="date"], /* ***** ADICIONADO ESTILO PARA INPUT TYPE DATE ***** */
 select,
 textarea {
     width: 100%;
@@ -137,6 +137,7 @@ textarea::placeholder {
 
 input[type="text"]:focus,
 input[type="number"]:focus,
+input[type="date"]:focus, /* ***** ADICIONADO ESTILO PARA INPUT TYPE DATE ***** */
 select:focus,
 textarea:focus {
     border-color: #007bff;
@@ -149,15 +150,19 @@ textarea {
     min-height: 100px;
 }
 
-/* --- Estilo para os Grupos de Seleção de Data --- */
+/* --- Estilo para os Grupos de Seleção de Data (REMOVIDO OU AJUSTADO) --- */
+/* Esta classe .date-select-group e seu estilo interno para 'select' não são mais necessários
+   se você removeu os selects de mês/ano e está usando input type="date" diretamente.
+   Se você ainda tiver outros grupos de select, pode manter a classe, mas remova o estilo do select interno. */
+/* REMOVIDO:
 .date-select-group {
     display: flex;
     gap: 15px;
 }
-
 .date-select-group select {
     flex: 1;
 }
+*/
 
 /* --- Estilo do Botão Salvar --- */
 button[type="submit"] {
@@ -225,16 +230,19 @@ button[type="submit"]:hover {
 
     input[type="text"],
     input[type="number"],
+    input[type="date"], /* ***** ADICIONADO ESTILO PARA INPUT TYPE DATE ***** */
     select,
     textarea {
         padding: 10px 12px;
         font-size: 0.95em;
     }
 
+    /* REMOVIDO:
     .date-select-group {
         flex-direction: column;
         gap: 10px;
     }
+    */
 
     button[type="submit"] {
         padding: 12px 20px;
@@ -284,6 +292,7 @@ button[type="submit"]:hover {
 
     input[type="text"],
     input[type="number"],
+    input[type="date"], /* ***** ADICIONADO ESTILO PARA INPUT TYPE DATE ***** */
     select,
     textarea {
         padding: 8px 10px;

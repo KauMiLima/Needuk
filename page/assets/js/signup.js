@@ -1,7 +1,10 @@
+// Definindo a URL da API em uma constante para facilitar a manutenção
+const API_BASE_URL = "https://needuk-6.onrender.com";
+
 // Elementos do cadastro
 const nome = document.getElementById("nome");
 const email = document.getElementById("email");
-const telefone = document.getElementById("telefone"); 
+const telefone = document.getElementById("telefone");
 const senha = document.getElementById("senha");
 const confirmSenha = document.getElementById("confirmSenha");
 const btnCadastrar = document.getElementById("btnCadastrar");
@@ -15,31 +18,31 @@ const toggleConfirmSenha = document.getElementById("toggleConfirmSenha");
 function formatarTelefone(event) {
     let input = event.target;
     let value = input.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+    let formattedValue = '';
 
-    // Aplica a máscara (XX) XXXXX-XXXX
-    if (value.length > 10) {
-        value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-    } else if (value.length > 6) {
-        value = value.replace(/^(\d{2})(\d{4})(\d{4}).*/, '($1) $2-$3');
-    } else if (value.length > 2) {
-        value = value.replace(/^(\d{2})(\d+).*/, '($1) $2');
-    } else if (value.length > 0) {
-        value = value.replace(/^(\d*)/, '($1');
+    if (value.length > 0) {
+        formattedValue += '(' + value.substring(0, 2);
+    }
+    if (value.length > 2) {
+        formattedValue += ') ' + value.substring(2, 7);
+    }
+    if (value.length > 7) {
+        formattedValue += '-' + value.substring(7, 11);
     }
 
-    input.value = value;
+    input.value = formattedValue;
 }
 
 telefone?.addEventListener("input", formatarTelefone);
 
 // Alternar visibilidade da senha
-function togglePassword(input, toggleIcon) {
-    if (input.type === "password") {
-        input.type = "text";
-        toggleIcon.textContent = "🙈";
+function togglePassword(inputElement, toggleIconElement) {
+    if (inputElement.type === "password") {
+        inputElement.type = "text";
+        toggleIconElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
     } else {
-        input.type = "password";
-        toggleIcon.textContent = "👁️";
+        inputElement.type = "password";
+        toggleIconElement.innerHTML = '<i class="fa-solid fa-eye"></i>';
     }
 }
 
@@ -57,15 +60,16 @@ function validarCampos() {
         return false;
     }
 
-    if (email.value.length < 5 || !email.value.includes('@')) {
-        msgError.textContent = "E-mail inválido.";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+        msgError.textContent = "E-mail inválido. Verifique o formato.";
         email.focus();
         return false;
     }
 
     let telefoneNumeros = telefone.value.replace(/\D/g, '');
     if (telefoneNumeros.length < 10 || telefoneNumeros.length > 11) {
-        msgError.textContent = "Telefone inválido. Utilize o formato (XX) XXXXX-XXXX.";
+        msgError.textContent = "Telefone inválido. Utilize o formato (XX) XXXXX-XXXX ou (XX) XXXX-XXXX.";
         telefone.focus();
         return false;
     }
@@ -86,67 +90,81 @@ function validarCampos() {
 }
 
 // Cadastro do usuário
-function cadastrar() {
-    if (!validarCampos()) return;
-
-    let listaUser = JSON.parse(localStorage.getItem("listaUser") || "[]");
-
-    if (listaUser.some(u => u.userCad === email.value)) {
-        msgError.textContent = "E-mail já cadastrado.";
-        email.focus();
+async function cadastrar() {
+    if (!validarCampos()) {
         return;
     }
 
-    listaUser.push({
-        nomeCad: nome.value,
-        userCad: email.value,
-        telCad: telefone.value,
-        senhaCad: senha.value
-    });
+    const userData = {
+        nome: nome.value,
+        email: email.value,
+        telefone: telefone.value.replace(/\D/g, ''), // Envia o telefone apenas com números para o backend
+        senha: senha.value
+    };
 
-    localStorage.setItem("listaUser", JSON.stringify(listaUser));
-
-    // ✅ Salva o email do usuário logado para dar boas-vindas no dashboard
-    localStorage.setItem("loggedInUserEmail", email.value);
-
-    msgSuccess.textContent = "Usuário cadastrado com sucesso! Redirecionando...";
+    btnCadastrar.disabled = true;
     msgError.textContent = "";
+    msgSuccess.textContent = "Cadastrando usuário...";
 
-    // Limpa os campos
-    nome.value = "";
-    email.value = "";
-    telefone.value = "";
-    senha.value = "";
-    confirmSenha.value = "";
+    try {
+        const response = await fetch(`https://needuk-6.onrender.com/usuarios`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData),
+        });
 
-    // ✅ Redireciona para o dashboard diretamente
-    setTimeout(() => {
-        window.location.href = "index.html";
-    }, 2000);
+        // Tenta ler a resposta como JSON, mesmo em caso de erro
+        const data = await response.json().catch(() => ({ message: 'Erro desconhecido.' }));
+
+        if (!response.ok) {
+            // Tratamento de erro aprimorado
+            if (response.status === 409) { // Exemplo: Conflito de e-mail ou telefone já cadastrado
+                throw new Error(data.message || 'E-mail ou telefone já cadastrado.');
+            }
+            throw new Error(data.message || 'Erro ao cadastrar. Verifique os dados fornecidos.');
+        }
+
+        console.log("Usuário cadastrado com sucesso pela API:", data);
+
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+        }
+
+        if (data.user) {
+            localStorage.setItem("userLogado", JSON.stringify(data.user));
+            localStorage.setItem("loggedInUserEmail", data.user.email || email.value);
+        } else {
+            localStorage.setItem("userLogado", JSON.stringify({
+                nome: nome.value,
+                email: email.value,
+                telefone: telefone.value.replace(/\D/g, '')
+            }));
+            localStorage.setItem("loggedInUserEmail", email.value);
+        }
+
+        msgSuccess.textContent = "Usuário cadastrado com sucesso! Redirecionando...";
+        msgError.textContent = "";
+
+        // Limpa os campos
+        nome.value = "";
+        email.value = "";
+        telefone.value = "";
+        senha.value = "";
+        confirmSenha.value = "";
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 2000);
+
+    } catch (err) {
+        console.error("Erro na requisição da API:", err);
+        msgError.textContent = err.message || "Erro desconhecido ao tentar cadastrar o usuário.";
+        msgSuccess.textContent = "";
+    } finally {
+        btnCadastrar.disabled = false;
+    }
 }
 
 btnCadastrar?.addEventListener("click", cadastrar);
-
-// Integração com API (opcional - comentada)
-/*
-fetch('', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        nome: nome.value,
-        email: email.value,
-        telefone: telefone.value, 
-        senha: senha.value
-    }),
-})
-.then(res => {
-    if (!res.ok) throw new Error('Erro ao cadastrar');
-    return res.json();
-})
-.then(data => {
-    // Sucesso, tratar resposta da API
-})
-.catch(err => {
-    msgError.textContent = err.message;
-});
-*/

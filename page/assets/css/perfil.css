@@ -137,18 +137,7 @@ nav ul li {
 .header-experiencias h2 {
   margin: 0;
 }
-#criarex {
-  background-color: #304ffe;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-#criarex:hover {
-  background-color: #1a33d5;
-}
+
 .experiencia-card {
   background-color: white;
   border-radius: 10px;

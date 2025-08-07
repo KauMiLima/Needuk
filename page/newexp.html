@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./assets/css/newexp.css"> <title>Nova Experiência</title>
-
+    <link rel="stylesheet" href="./assets/css/newexp.css"> 
+    <title>Nova Experiência</title>
 </head>
 
 <body>
     <nav>
-        <img src="./assets/image/LogoNeedukReduzida.png" alt="Logo Needuk" class="nav-logo"> <a href="dashboard.html" class="back-button">
+        <img src="./assets/image/LogoNeedukReduzida.png" alt="Logo Needuk" class="nav-logo"> 
+        <a href="dashboard.html" class="back-button">
             <img src="./assets/image/Group 54.png" alt="Voltar" class="back-icon"> Voltar
         </a>
     </nav>
-    <h1>Nova experiência</h1>
+    
+    <h1 id="tituloPagina">Nova experiência</h1> 
+    
     <form id="experienciaForm">
         <div>
             <label for="tituloExperiencia">Título da nova experiência:</label>
@@ -35,51 +38,13 @@
         </div>
 
         <div>
-            <label>Data de Início:</label>
-            <div class="date-select-group">
-                <select id="mesInicio" name="mesInicio">
-                    <option value="">Mês</option>
-                    <option value="01">Janeiro</option>
-                    <option value="02">Fevereiro</option>
-                    <option value="03">Março</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Maio</option>
-                    <option value="06">Junho</option>
-                    <option value="07">Julho</option>
-                    <option value="08">Agosto</option>
-                    <option value="09">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
-                </select>
-                <select id="anoInicio" name="anoInicio">
-                    <option value="">Ano</option>
-                </select>
-            </div>
+            <label for="dataInicio">Data de Início:</label>
+            <input type="date" id="dataInicio" name="dataInicio" required />
         </div>
 
         <div>
-            <label>Data de Término:</label>
-            <div class="date-select-group">
-                <select id="mesTermino" name="mesTermino">
-                    <option value="">Mês</option>
-                    <option value="01">Janeiro</option>
-                    <option value="02">Fevereiro</option>
-                    <option value="03">Março</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Maio</option>
-                    <option value="06">Junho</option>
-                    <option value="07">Julho</option>
-                    <option value="08">Agosto</option>
-                    <option value="09">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
-                </select>
-                <select id="anoTermino" name="anoTermino">
-                    <option value="">Ano</option>
-                </select>
-            </div>
+            <label for="dataTermino">Data de Término (opcional):</label>
+            <input type="date" id="dataTermino" name="dataTermino" />
         </div>
 
         <div>
@@ -100,6 +65,7 @@
         <button type="submit">Salvar</button>
     </form>
 
-    <script src="./assets/js/newexp.js"></script> </body>
+    <script src="./assets/js/newexp.js"></script>
+</body>
 
 </html>
