@@ -18,6 +18,15 @@ function togglePassword() {
 
 toggleSenha?.addEventListener("click", togglePassword);
 
+// Adiciona um ouvinte de evento para o campo de senha para a tecla Enter
+senha?.addEventListener("keydown", (event) => {
+    // Verifica se a tecla pressionada é a tecla "Enter" (código 13 ou "Enter")
+    if (event.key === "Enter") {
+        event.preventDefault(); // Impede o comportamento padrão do Enter (como enviar um formulário)
+        entrar(); // Chama a função de login
+    }
+});
+
 // Função de login
 async function entrar() { // Torna a função assíncrona
     msgError.textContent = ""; // Limpa a mensagem de erro anterior

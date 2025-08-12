@@ -237,13 +237,6 @@ button[type="submit"]:hover {
         font-size: 0.95em;
     }
 
-    /* REMOVIDO:
-    .date-select-group {
-        flex-direction: column;
-        gap: 10px;
-    }
-    */
-
     button[type="submit"] {
         padding: 12px 20px;
         font-size: 1.05em;

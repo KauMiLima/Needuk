@@ -4,20 +4,28 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./assets/css/newexp.css"> 
+    <link rel="stylesheet" href="./assets/css/newexp.css">
     <title>Nova Experiência</title>
+    <style>
+        .obrigatorio {
+            color: red;
+            margin-left: 5px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <nav>
-        <img src="./assets/image/LogoNeedukReduzida.png" alt="Logo Needuk" class="nav-logo"> 
+        <img src="./assets/image/LogoNeedukReduzida.png" alt="Logo Needuk" class="nav-logo">
         <a href="dashboard.html" class="back-button">
             <img src="./assets/image/Group 54.png" alt="Voltar" class="back-icon"> Voltar
         </a>
     </nav>
-    
-    <h1 id="tituloPagina">Nova experiência</h1> 
-    
+
+    <h1 id="tituloPagina">Nova experiência</h1>
+
     <form id="experienciaForm">
         <div>
             <label for="tituloExperiencia">Título da nova experiência:</label>
@@ -39,7 +47,7 @@
 
         <div>
             <label for="dataInicio">Data de Início:</label>
-            <input type="date" id="dataInicio" name="dataInicio" required />
+            <input type="date" id="dataInicio" name="dataInicio" />
         </div>
 
         <div>

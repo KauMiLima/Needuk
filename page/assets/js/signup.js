@@ -49,6 +49,16 @@ function togglePassword(inputElement, toggleIconElement) {
 toggleSenha?.addEventListener("click", () => togglePassword(senha, toggleSenha));
 toggleConfirmSenha?.addEventListener("click", () => togglePassword(confirmSenha, toggleConfirmSenha));
 
+// Adiciona um ouvinte de evento para o campo de confirmação de senha para a tecla Enter
+confirmSenha?.addEventListener("keydown", (event) => {
+    // Verifica se a tecla pressionada é a tecla "Enter"
+    if (event.key === "Enter") {
+        event.preventDefault(); // Impede o comportamento padrão do Enter
+        cadastrar(); // Chama a função de cadastro
+    }
+});
+
+
 // Validação dos campos
 function validarCampos() {
     msgError.textContent = "";
