@@ -12,9 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const API_EXPERIENCIAS_URL = "https://needuk-6.onrender.com/experiencias";
   let experienciaIdParaEdicao = null;
 
-  // Função para exibir/ocultar asterisco vermelho
-  function marcarCampoObrigatorio(campo) {
-    let label = campo.closest("div").querySelector("label");
+  // Adiciona o asterisco vermelho ao lado do label
+  function adicionarAsterisco(campo) {
+    const container = campo.closest("div");
+    if (!container) return;
+
+    const label = container.querySelector("label");
     if (!label) return;
 
     let estrela = label.querySelector(".obrigatorio");
@@ -22,12 +25,34 @@ document.addEventListener("DOMContentLoaded", function () {
       estrela = document.createElement("span");
       estrela.classList.add("obrigatorio");
       estrela.textContent = "*";
-      estrela.style.color = "red"; // Adicionado para destacar o asterisco
+      estrela.style.color = "red";
+      estrela.style.marginLeft = "4px";
       label.appendChild(estrela);
     }
+  }
 
-    // A condição para exibir o asterisco é se o campo está vazio
-    estrela.style.display = campo.value.trim() === "" ? "inline" : "none";
+  // Mostra a mensagem "Obrigatório" acima do campo se estiver vazio
+  function mostrarErroSeVazio(campo) {
+    const container = campo.closest("div");
+    if (!container) return;
+
+    let mensagemErro = container.querySelector(".mensagem-obrigatorio");
+
+    if (campo.value.trim() === "") {
+      if (!mensagemErro) {
+        mensagemErro = document.createElement("div");
+        mensagemErro.classList.add("mensagem-obrigatorio");
+        mensagemErro.style.color = "red";
+        mensagemErro.style.fontSize = "12px";
+        mensagemErro.style.marginBottom = "4px";
+        mensagemErro.textContent = "Obrigatório";
+        container.insertBefore(mensagemErro, campo);
+      }
+    } else {
+      if (mensagemErro) {
+        mensagemErro.remove();
+      }
+    }
   }
 
   const camposObrigatorios = [
@@ -37,11 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
     cargaHorariaInput,
   ];
 
+  // Mostra os asteriscos, mas não a mensagem de erro ao iniciar
   camposObrigatorios.forEach((campo) => {
-    // Inicializa o asterisco ao carregar a página se o campo estiver vazio
-    marcarCampoObrigatorio(campo);
+    adicionarAsterisco(campo);
     campo.addEventListener("input", () => {
-      marcarCampoObrigatorio(campo);
+      mostrarErroSeVazio(campo);
     });
   });
 
@@ -52,14 +77,13 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.href = "index.html";
       return;
     }
+
     try {
-      // CORREÇÃO: Utilizando a sintaxe correta de template literal com backticks (`)
       const response = await fetch(`${API_EXPERIENCIAS_URL}/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // CORREÇÃO: Utilizando a sintaxe correta de template literal com backticks (`)
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -89,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function () {
       experienciaIdParaEdicao = id;
     } catch (error) {
       alert(`Erro: ${error.message}`);
-      // Redireciona apenas se o token for inválido, caso contrário exibe o erro
       if (error.message.includes("autenticação")) {
         window.location.href = "index.html";
       }
@@ -108,9 +131,10 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
 
     let isValid = true;
+
     camposObrigatorios.forEach((campo) => {
+      mostrarErroSeVazio(campo); // mostra a mensagem "Obrigatório" só ao salvar
       if (campo.value.trim() === "") {
-        marcarCampoObrigatorio(campo);
         isValid = false;
       }
     });
@@ -154,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let method = experienciaIdParaEdicao ? "PUT" : "POST";
     let url = experienciaIdParaEdicao
-      ? `${API_EXPERIENCIAS_URL}/${experienciaIdParaEdicao}` // CORREÇÃO
+      ? `${API_EXPERIENCIAS_URL}/${experienciaIdParaEdicao}`
       : API_EXPERIENCIAS_URL;
 
     try {
@@ -162,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
         method: method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // CORREÇÃO
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(experienciaData),
       });
@@ -172,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (contentType && contentType.includes("application/json")) {
         data = await response.json();
       } else {
-        data = { message: (await response.text()) || "Resposta inválida." }; // Melhorando a mensagem de erro
+        data = { message: (await response.text()) || "Resposta inválida." };
       }
 
       if (!response.ok) {

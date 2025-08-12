@@ -166,7 +166,7 @@ async function cadastrar() {
 
         setTimeout(() => {
             window.location.href = "index.html";
-        }, 2000);
+        }, 1000);
 
     } catch (err) {
         console.error("Erro na requisição da API:", err);
