@@ -96,10 +96,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     elements.viewBtn.addEventListener('click', () => {
-        // Lógica para gerar PDF (simplificada)
-        const doc = new window.jspdf.jsPDF();
-        doc.text("Currículo", 10, 10);
-        doc.save("curriculo.pdf");
+        // Confirmação simples antes de gerar o PDF
+        if (confirm('Deseja gerar o currículo em PDF?')) {
+            // Lógica para gerar PDF (mantida igual)
+            const doc = new window.jspdf.jsPDF();
+            
+            // Adicione aqui todo o conteúdo do currículo que já existe
+            // Exemplo básico (substitua pelo seu conteúdo real):
+            doc.setFontSize(18);
+            doc.text("Currículo Profissional", 10, 10);
+            
+            // Adicione os dados do usuário
+            const user = JSON.parse(localStorage.getItem('userLogado')||'{}');
+            doc.setFontSize(12);
+            doc.text(`Nome: ${user.nome || 'Não informado'}`, 10, 20);
+            doc.text(`Email: ${user.email || 'Não informado'}`, 10, 30);
+            doc.text(`Telefone: ${utils.formatPhone(user.telefone)}`, 10, 40);
+            
+            // Adicione as experiências profissionais
+            const experiences = JSON.parse(localStorage.getItem("experienciasAPI") || "[]");
+            let y = 60;
+            
+            experiences.forEach(exp => {
+                doc.text(`- ${exp.titulo} (${exp.tipo})`, 10, y);
+                y += 10;
+            });
+            
+            doc.save("curriculo.pdf");
+        }
     });
 
     // Inicialização
