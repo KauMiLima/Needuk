@@ -70,6 +70,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // --- NOVO: Limita a entrada do campo de carga horária para 3 dígitos ---
+  cargaHorariaInput.addEventListener('input', function() {
+    if (this.value.length > 3) {
+      this.value = this.value.slice(0, 3);
+    }
+  });
+
   async function carregarExperienciaParaEdicao(id) {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -133,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isValid = true;
 
     camposObrigatorios.forEach((campo) => {
-      mostrarErroSeVazio(campo); // mostra a mensagem "Obrigatório" só ao salvar
+      mostrarErroSeVazio(campo); 
       if (campo.value.trim() === "") {
         isValid = false;
       }
@@ -202,6 +209,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!response.ok) {
         throw new Error(data.message || "Erro ao salvar experiência.");
       }
+
+      localStorage.setItem("experienciaAtualizada", JSON.stringify(experienciaData));
 
       alert(
         `Experiência ${
