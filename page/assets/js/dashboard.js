@@ -119,25 +119,8 @@ document.addEventListener("DOMContentLoaded", function () {
         throw new Error("Formato de dados inesperado do servidor. Esperado um array.");
       }
 
-      const experienciaAtualizadaJSON = localStorage.getItem("experienciaAtualizada");
-      
-      if (experienciaAtualizadaJSON) {
-        try {
-          const experienciaAtualizada = JSON.parse(experienciaAtualizadaJSON);
-          const experienciaIndex = experiencias.findIndex(exp => exp.id === experienciaAtualizada.id);
-          
-          if (experienciaIndex !== -1) {
-            experiencias[experienciaIndex] = experienciaAtualizada;
-          } else {
-            experiencias.unshift(experienciaAtualizada);
-          }
-        } catch (e) {
-          console.error("Erro ao processar dados do localStorage:", e);
-        } finally {
-          localStorage.removeItem("experienciaAtualizada");
-        }
-      }
-
+      // O bloco de código que causava a duplicação foi removido.
+      // Agora, a função renderizarExperiencias() usa apenas os dados da API.
       renderizarExperiencias(experiencias);
 
     } catch (error) {

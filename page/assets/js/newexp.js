@@ -70,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // --- NOVO: Limita a entrada do campo de carga horária para 3 dígitos ---
-  cargaHorariaInput.addEventListener('input', function() {
+  // Limita a entrada do campo de carga horária para 3 dígitos
+  cargaHorariaInput.addEventListener('input', function () {
     if (this.value.length > 3) {
       this.value = this.value.slice(0, 3);
     }
@@ -126,11 +126,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // --- Lógica Corrigida AQUI ---
   const urlParams = new URLSearchParams(window.location.search);
   const editId = urlParams.get("editId");
-  if (editId) {
+
+  // Verifica se o 'editId' existe, não é uma string vazia e é um número
+  if (editId && !isNaN(editId)) {
     carregarExperienciaParaEdicao(editId);
   } else {
+    // Se não houver ID válido na URL, assume-se que é uma nova experiência
     tituloPagina.textContent = "Criar Nova Experiência";
   }
 
@@ -140,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isValid = true;
 
     camposObrigatorios.forEach((campo) => {
-      mostrarErroSeVazio(campo); 
+      mostrarErroSeVazio(campo);
       if (campo.value.trim() === "") {
         isValid = false;
       }
